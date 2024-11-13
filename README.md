@@ -1,4 +1,6 @@
 # projet_architectureweb
 
 
-## Hello world
+## Cree un projet Symfony: 
+`Symfony new PPROJET_ARCHITECTURE`
+
