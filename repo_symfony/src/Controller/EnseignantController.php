@@ -1,7 +1,7 @@
 <?php
 
-// namespace App\Controller;
-namespace App\ApiResource;
+namespace App\Controller;
+// namespace App\ApiResource;
  
 use ApiPlatform\Metadata\ApiResource;
 
@@ -14,8 +14,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/enseignant')]
+
 #[ApiResource]
+#[Route('/enseignant')]
 final class EnseignantController extends AbstractController
 {
     #[Route(name: 'app_enseignant_index', methods: ['GET'])]
