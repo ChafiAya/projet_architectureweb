@@ -23,13 +23,32 @@ final class ReserveController extends AbstractController
     }
 
     #[Route('/new', name: 'app_reserve_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, ReserveRepository $reserveRepository): Response
     {
         $reserve = new Reserve();
         $form = $this->createForm(ReserveType::class, $reserve);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            //recuperer data de la Reserve
+            $selectedSalles = $reserve->getSalles();
+            $selectDate_reservation = $reserve->getDateReservation();
+            $selectHeureDebut = $reserve->getHeureDepart();
+            $selectHeureFin = $reserve->getHeureFin();
+
+            //verification de conflit 
+            foreach($selectedSalles as $sale ){
+                $conflitReservation = $reserveRepository->findConflictingReservations($sale,$selectDate_reservation,$selectHeureDebut,$selectHeureFin);
+                if(count($conflitReservation)>0){
+                    $this->addFlash('error', 'The selected room is already reserved during the specified time.');
+                    return $this->render('reserve/new.html.twig',[                'reserve' => $reserve,
+                    'form' => $form,
+                ]);
+                }
+            }
+
+
             $entityManager->persist($reserve);
             $entityManager->flush();
 

@@ -3,6 +3,11 @@
 {% block title %}New Reserve{% endblock %}
 
 {% block body %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">
+            {{ message }}
+        </div>
+    {% endfor %}
     <h1>Create new Reserve</h1>
 
     {{ include('reserve/_form.html.twig') }}
