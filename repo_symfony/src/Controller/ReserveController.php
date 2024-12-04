@@ -42,8 +42,10 @@ final class ReserveController extends AbstractController
                 $conflitReservation = $reserveRepository->findConflictingReservations($sale,$selectDate_reservation,$selectHeureDebut,$selectHeureFin);
                 if(count($conflitReservation)>0){
                     $this->addFlash('error', 'The selected room is already reserved during the specified time.');
-                    return $this->render('reserve/new.html.twig',[                'reserve' => $reserve,
-                    'form' => $form,
+                    return $this->render('reserve/new.html.twig',[      
+                        'conflitReservation'=> $conflitReservation,         
+                        'reserve' => $reserve,
+                        'form' => $form,
                 ]);
                 }
             }
