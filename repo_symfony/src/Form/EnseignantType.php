@@ -19,16 +19,16 @@ class EnseignantType extends AbstractType
             ->add('prenom')
             ->add('email_enseignant')
             ->add('departement')
-            ->add('matieres', EntityType::class, [
-                'class' => Matiere::class,
-                'choice_label' => 'id',
-                'multiple' => true,
-            ])
-            ->add('reserves', EntityType::class, [
-                'class' => Reserve::class,
-                'choice_label' => 'id',
-                'multiple' => true,
-            ])
+            // ->add('matieres', EntityType::class, [
+            //     'class' => Matiere::class,
+            //     'choice_label' => 'id',
+            //     'multiple' => true,
+            // ])
+            // ->add('reserves', EntityType::class, [
+            //     'class' => Reserve::class,
+            //     'choice_label' => 'id',
+            //     'multiple' => true,
+            // ])
         ;
     }
 

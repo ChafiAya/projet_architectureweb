@@ -17,11 +17,12 @@ class PromotionType extends AbstractType
             ->add('niveau_promotion')
             ->add('enseignement')
             ->add('choix')
-            ->add('matieres', EntityType::class, [
-                'class' => Matiere::class,
-                'choice_label' => 'id',
-                'multiple' => true,
-            ])
+            ->add('nbr_etudiant')
+            // ->add('matieres', EntityType::class, [
+            //     'class' => Matiere::class,
+            //     'choice_label' => 'id',
+            //     'multiple' => true,
+            // ])
         ;
     }
 

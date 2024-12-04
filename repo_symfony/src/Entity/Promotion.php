@@ -30,6 +30,9 @@ class Promotion
     #[ORM\ManyToMany(targetEntity: Matiere::class, inversedBy: 'promotions')]
     private Collection $matieres;
 
+    #[ORM\Column]
+    private ?int $nbr_etudiant = null;
+
     public function __construct()
     {
         $this->matieres = new ArrayCollection();
@@ -96,6 +99,18 @@ class Promotion
     public function removeMatiere(Matiere $matiere): static
     {
         $this->matieres->removeElement($matiere);
+
+        return $this;
+    }
+
+    public function getNbrEtudiant(): ?int
+    {
+        return $this->nbr_etudiant;
+    }
+
+    public function setNbrEtudiant(int $nbr_etudiant): static
+    {
+        $this->nbr_etudiant = $nbr_etudiant;
 
         return $this;
     }

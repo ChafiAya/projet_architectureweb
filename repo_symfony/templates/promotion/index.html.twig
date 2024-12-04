@@ -12,6 +12,7 @@
                 <th>Niveau_promotion</th>
                 <th>Enseignement</th>
                 <th>Choix</th>
+                <th>Nombre etudiant</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -22,6 +23,7 @@
                 <td>{{ promotion.niveauPromotion }}</td>
                 <td>{{ promotion.enseignement }}</td>
                 <td>{{ promotion.choix }}</td>
+                <td>{{ promotion.nbrEtudiant  }}</td>
                 <td>
                     <a href="{{ path('app_promotion_show', {'id': promotion.id}) }}">show</a>
                     <a href="{{ path('app_promotion_edit', {'id': promotion.id}) }}">edit</a>
