@@ -31,11 +31,18 @@ class Promotion
     private Collection $matieres;
 
     #[ORM\Column]
-    private ?int $nbr_etudiant = null;
+    private ?int $nbr_etudiants = null;
+
+    /**
+     * @var Collection<int, Reserve>
+     */
+    #[ORM\ManyToMany(targetEntity: Reserve::class, mappedBy: 'promotion')]
+    private Collection $reserves;
 
     public function __construct()
     {
         $this->matieres = new ArrayCollection();
+        $this->reserves = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -105,12 +112,39 @@ class Promotion
 
     public function getNbrEtudiant(): ?int
     {
-        return $this->nbr_etudiant;
+        return $this->nbr_etudiants;
     }
 
     public function setNbrEtudiant(int $nbr_etudiant): static
     {
-        $this->nbr_etudiant = $nbr_etudiant;
+        $this->nbr_etudiants = $nbr_etudiant;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Reserve>
+     */
+    public function getReserves(): Collection
+    {
+        return $this->reserves;
+    }
+
+    public function addReserf(Reserve $reserf): static
+    {
+        if (!$this->reserves->contains($reserf)) {
+            $this->reserves->add($reserf);
+            $reserf->addPromotion($this);
+        }
+
+        return $this;
+    }
+
+    public function removeReserf(Reserve $reserf): static
+    {
+        if ($this->reserves->removeElement($reserf)) {
+            $reserf->removePromotion($this);
+        }
 
         return $this;
     }

@@ -107,4 +107,20 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
+
+    #[ORM\OneToOne(targetEntity: Enseignant::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Enseignant $enseignant = null;
+
+    public function getEnseignant(): ?Enseignant
+    {
+        return $this->enseignant;
+    }
+
+    public function setEnseignant(?Enseignant $enseignant): static
+    {
+        $this->enseignant = $enseignant;
+
+        return $this;
+    }
 }

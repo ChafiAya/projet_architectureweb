@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Enseignant;
+use App\Entity\Promotion;
 use App\Entity\Reserve;
 use App\Entity\Sale;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -27,13 +28,19 @@ class ReserveType extends AbstractType
             ->add('etat_reservation')
             ->add('salles', EntityType::class, [
                 'class' => Sale::class,
-                'choice_label' => 'id',
+                'choice_label' => 'nom_de_salle',
                 'multiple' => true,
             ])
             ->add('enseignants', EntityType::class, [
                 'class' => Enseignant::class,
                 'choice_label' => 'id',
                 'multiple' => true,
+            ])
+            ->add('promotion', EntityType::class,[
+                'class'=> Promotion::class,
+                'choice_label'=>'niveau_promotion',
+                'multiple'=>true
+
             ])
         ;
     }

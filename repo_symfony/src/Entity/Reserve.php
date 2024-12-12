@@ -40,10 +40,17 @@ class Reserve
     #[ORM\ManyToMany(targetEntity: Enseignant::class, inversedBy: 'reserves')]
     private Collection $enseignants;
 
+    /**
+     * @var Collection<int, Promotion>
+     */
+    #[ORM\ManyToMany(targetEntity: Promotion::class, inversedBy: 'reserves')]
+    private Collection $promotion;
+
     public function __construct()
     {
         $this->salles = new ArrayCollection();
         $this->enseignants = new ArrayCollection();
+        $this->promotion = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -143,6 +150,30 @@ class Reserve
     public function removeEnseignant(Enseignant $enseignant): static
     {
         $this->enseignants->removeElement($enseignant);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Promotion>
+     */
+    public function getPromotion(): Collection
+    {
+        return $this->promotion;
+    }
+
+    public function addPromotion(Promotion $promotion): static
+    {
+        if (!$this->promotion->contains($promotion)) {
+            $this->promotion->add($promotion);
+        }
+
+        return $this;
+    }
+
+    public function removePromotion(Promotion $promotion): static
+    {
+        $this->promotion->removeElement($promotion);
 
         return $this;
     }
