@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Reserve;
+use App\Entity\Sale;
 use App\Form\ReserveType;
 use App\Repository\ReserveRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,9 +34,45 @@ final class ReserveController extends AbstractController
 
             //recuperer data de la Reserve
             $selectedSalles = $reserve->getSalles();
+            $selectedEnseignants = $reserve->getEnseignants();
             $selectDate_reservation = $reserve->getDateReservation();
             $selectHeureDebut = $reserve->getHeureDepart();
-            $selectHeureFin = $reserve->getHeureFin();
+            $selectHeureFin = $reserve->getHeureFin();     
+            $selectedPromotion = $reserve->getPromotion();  
+            
+
+            
+            foreach($selectedEnseignants as $enseignant){
+                $conflitEnseignant = $reserveRepository->findConflictingReservationsForEnseignant(
+                    $enseignant, $selectDate_reservation, $selectHeureDebut, $selectHeureFin
+                );
+                if(count($conflitEnseignant)>0){
+                    $this->addFlash('error',sprintf('Vous avez  déjà une réservation durant cette période.'));
+                    return $this->render('reserve/new.html.twig', [
+                        'reserve' => $reserve,
+                        'form' => $form,
+                    ]);
+                }
+            }
+
+            //verifier le conflit de capasiter de salle avec le nombre d'etudaint 
+            foreach($selectedSalles as $salles){
+                foreach($selectedPromotion as $promo){
+                    $fincConflicatCapacity = $reserveRepository->findConflictCapacityClassRoom($salles,$promo);
+                    if(count($fincConflicatCapacity)>0){
+                        $this->addFlash('error', sprintf(
+                            'La salle ne peut pas accueillir la promotion car la capacité maximale est insuffisante pour %d étudiants.',
+
+                            )
+                        );
+
+                        return $this->render('reserve/new.html.twig',[
+                            'reserve' => $reserve,
+                            'form' => $form,
+                        ]);
+                    }
+                }
+            }
 
             //verification de conflit 
             foreach($selectedSalles as $sale ){
