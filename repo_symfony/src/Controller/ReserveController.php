@@ -4,13 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Reserve;
 use App\Entity\Sale;
+use App\Entity\Promotion;
 use App\Form\ReserveType;
 use App\Repository\ReserveRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/reserve')]
 final class ReserveController extends AbstractController
@@ -32,22 +33,21 @@ final class ReserveController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            //recuperer data de la Reserve
+            // Retrieve data from Reserve
             $selectedSalles = $reserve->getSalles();
             $selectedEnseignants = $reserve->getEnseignants();
             $selectDate_reservation = $reserve->getDateReservation();
             $selectHeureDebut = $reserve->getHeureDepart();
             $selectHeureFin = $reserve->getHeureFin();     
             $selectedPromotion = $reserve->getPromotion();  
-            
 
-            
-            foreach($selectedEnseignants as $enseignant){
+            // Check for conflicts for each Enseignant
+            foreach ($selectedEnseignants as $enseignant) {
                 $conflitEnseignant = $reserveRepository->findConflictingReservationsForEnseignant(
                     $enseignant, $selectDate_reservation, $selectHeureDebut, $selectHeureFin
                 );
-                if(count($conflitEnseignant)>0){
-                    $this->addFlash('error',sprintf('Vous avez  déjà une réservation durant cette période.'));
+                if (count($conflitEnseignant) > 0) {
+                    $this->addFlash('error', 'Vous avez déjà une réservation durant cette période.');
                     return $this->render('reserve/new.html.twig', [
                         'reserve' => $reserve,
                         'form' => $form,
@@ -55,18 +55,18 @@ final class ReserveController extends AbstractController
                 }
             }
 
-            //verifier le conflit de capasiter de salle avec le nombre d'etudaint 
-            foreach($selectedSalles as $salles){
-                foreach($selectedPromotion as $promo){
-                    $fincConflicatCapacity = $reserveRepository->findConflictCapacityClassRoom($salles,$promo);
-                    if(count($fincConflicatCapacity)>0){
+            // Check for classroom capacity conflicts
+            foreach ($selectedSalles as $salle) {
+                foreach ($selectedPromotion as $promo) {
+                    $conflictCapacity = $reserveRepository->findConflictCapacityClassRoom($salle, $promo);
+                    if (count($conflictCapacity) > 0) {
                         $this->addFlash('error', sprintf(
                             'La salle ne peut pas accueillir la promotion car la capacité maximale est insuffisante pour %d étudiants.',
+                            $promo->getNbrEtudiant()
 
-                            )
-                        );
+                        ));
 
-                        return $this->render('reserve/new.html.twig',[
+                        return $this->render('reserve/new.html.twig', [
                             'reserve' => $reserve,
                             'form' => $form,
                         ]);
@@ -74,20 +74,19 @@ final class ReserveController extends AbstractController
                 }
             }
 
-            //verification de conflit 
-            foreach($selectedSalles as $sale ){
-                $conflitReservation = $reserveRepository->findConflictingReservations($sale,$selectDate_reservation,$selectHeureDebut,$selectHeureFin);
-                if(count($conflitReservation)>0){
-                    $this->addFlash('error', 'The selected room is already reserved during the specified time.');
-                    return $this->render('reserve/new.html.twig',[      
-                        'conflitReservation'=> $conflitReservation,         
+            // Check for room reservation conflicts
+            foreach ($selectedSalles as $salle) {
+                $conflitReservation = $reserveRepository->findConflictingReservations($salle, $selectDate_reservation, $selectHeureDebut, $selectHeureFin);
+                if (count($conflitReservation) > 0) {
+                    $this->addFlash('error', 'La salle sélectionnée est déjà réservée pendant cette période.');
+                    return $this->render('reserve/new.html.twig', [
                         'reserve' => $reserve,
                         'form' => $form,
-                ]);
+                    ]);
                 }
             }
 
-
+            // Save the reservation
             $entityManager->persist($reserve);
             $entityManager->flush();
 
@@ -129,7 +128,7 @@ final class ReserveController extends AbstractController
     #[Route('/{id}', name: 'app_reserve_delete', methods: ['POST'])]
     public function delete(Request $request, Reserve $reserve, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$reserve->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $reserve->getId(), $request->request->get('_token'))) {
             $entityManager->remove($reserve);
             $entityManager->flush();
         }
