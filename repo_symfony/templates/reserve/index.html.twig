@@ -5,6 +5,44 @@
 {% block body %}
     <h1>Reserve index</h1>
 
+    <!-- Search Form -->
+    <form method="get" action="{{ path('app_reserve_index') }}">
+        <div>
+            <label for="salle">Salle:</label>
+            <select id="salle" name="salle_id">
+                <option value="">-- Select Salle --</option>
+                {% for salle in salles %}
+                    <option value="{{ salle.id }}" 
+                        {{ app.request.query.get('salle_id') == salle.id ? 'selected' : '' }}>
+                        {{ salle.nomDeSalle }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label for="date_reservation">Date:</label>
+            <input type="date" id="date_reservation" name="date_reservation" 
+                   value="{{ app.request.query.get('date_reservation') }}">
+        </div>
+
+        <div>
+            <label for="promotion">Promotion:</label>
+            <select id="promotion" name="promotion_id">
+                <option value="">-- Select Promotion --</option>
+                {% for promotion in promotions %}
+                    <option value="{{ promotion.id }}" 
+                        {{ app.request.query.get('promotion_id') == promotion.id ? 'selected' : '' }}>
+                        {{ promotion.niveauPromotion }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Reservation Table -->
     <table class="table">
         <thead>
             <tr>

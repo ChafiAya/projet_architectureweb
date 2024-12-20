@@ -7,6 +7,8 @@ use App\Entity\Sale;
 use App\Entity\Promotion;
 use App\Form\ReserveType;
 use App\Repository\ReserveRepository;
+use App\Repository\SaleRepository;
+use App\Repository\PromotionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -16,13 +18,39 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/reserve')]
 final class ReserveController extends AbstractController
 {
-    #[Route(name: 'app_reserve_index', methods: ['GET'])]
-    public function index(ReserveRepository $reserveRepository): Response
+
+    #[Route('/', name: 'app_reserve_index', methods: ['GET'])]
+    public function index(Request $request, ReserveRepository $reserveRepository, SaleRepository $saleRepository, PromotionRepository $promotionRepository): Response
     {
+        // Get 'salle_id', 'date_reservation', and 'promotion_id' from the request query parameters
+        $salleId = $request->query->get('salle_id');
+        $dateReservation = $request->query->get('date_reservation');
+        $promotionId = $request->query->get('promotion_id');
+    
+        // Cast 'salle_id' and 'promotion_id' to integer if they are not empty or null
+        $salleId = $salleId ? (int) $salleId : null;
+        $promotionId = $promotionId ? (int) $promotionId : null;
+    
+        // Fetch reservations based on salle_id, date_reservation, and promotion_id if provided
+        $reserves = $reserveRepository->findByFilters($salleId, $dateReservation, $promotionId);
+    
+        // Fetch all salles and promotions for the dropdown
+        $salles = $saleRepository->findAll();
+        $promotions = $promotionRepository->findAll();
+    
+        // Render the template with reserves, salles, promotions, and selected filters
         return $this->render('reserve/index.html.twig', [
-            'reserves' => $reserveRepository->findAll(),
+            'reserves' => $reserves,
+            'salles' => $salles,
+            'promotions' => $promotions,
+            'salleId' => $salleId, // Pass the selected salle ID to highlight in dropdown
+            'dateReservation' => $dateReservation, // Pass the selected date to highlight in input field
+            'promotionId' => $promotionId, // Pass the selected promotion ID
         ]);
     }
+    
+
+
 
     #[Route('/new', name: 'app_reserve_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, ReserveRepository $reserveRepository): Response
@@ -135,4 +163,7 @@ final class ReserveController extends AbstractController
 
         return $this->redirectToRoute('app_reserve_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    
 }
+
