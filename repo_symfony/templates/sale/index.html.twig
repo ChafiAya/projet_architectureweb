@@ -8,11 +8,10 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
+                
                 <th>Batiment</th>
                 <th>Etage</th>
                 <th>Nom_de_salle</th>
-                <th>Disponibilite</th>
                 <th>Capacite</th>
                 <th>actions</th>
             </tr>
@@ -20,11 +19,10 @@
         <tbody>
         {% for sale in sales %}
             <tr>
-                <td>{{ sale.id }}</td>
+              
                 <td>{{ sale.batiment }}</td>
                 <td>{{ sale.etage }}</td>
                 <td>{{ sale.nomDeSalle }}</td>
-                <td>{{ sale.disponibilite ? 'Yes' : 'No' }}</td>
                 <td>{{ sale.capacite }}</td>
                 <td>
                     <a href="{{ path('app_sale_show', {'id': sale.id}) }}">show</a>

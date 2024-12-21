@@ -50,7 +50,7 @@
                 <th>Date_reservation</th>
                 <th>Heure_depart</th>
                 <th>Heure_fin</th>
-                <th>Etat_reservation</th>
+               
                 <th>Salles</th>
                 <th>Enseignants</th>
                 <th>Promotions</th>
@@ -64,7 +64,7 @@
                 <td>{{ reserve.dateReservation ? reserve.dateReservation|date('Y-m-d') : '' }}</td>
                 <td>{{ reserve.heureDepart ? reserve.heureDepart|date('H:i:s') : '' }}</td>
                 <td>{{ reserve.heureFin ? reserve.heureFin|date('H:i:s') : '' }}</td>
-                <td>{{ reserve.etatReservation }}</td>
+              
 
                 <td>
                     {% for salle in reserve.salles %}
