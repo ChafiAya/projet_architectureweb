@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use App\Entity\Enseignant; // Importing Enseignant entity
+use App\Entity\Promotion; // Importing Promotion entity
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -27,6 +29,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
+    // One-to-One relationship with Enseignant entity
+    #[ORM\OneToOne(targetEntity: Enseignant::class, cascade: ['persist', 'remove'])]
+    private ?Enseignant $enseignant = null;
+
+    // Many-to-One relationship with Promotion entity
+    #[ORM\ManyToOne(targetEntity: Promotion::class)]
+    #[ORM\JoinColumn(nullable: true)]  // Promotion can be null if it's not set
+    private ?Promotion $promotion = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -40,7 +51,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setEmail(string $email): static
     {
         $this->email = $email;
-
         return $this;
     }
 
@@ -52,7 +62,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getRoles(): array
     {
-        // Here we directly return an array of the single role
+        // Return an array of roles
         return [$this->roles];
     }
 
@@ -70,6 +80,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setPassword(string $password): static
     {
         $this->password = $password;
+        return $this;
+    }
+
+    // Getters and setters for the Enseignant relationship
+    public function getEnseignant(): ?Enseignant
+    {
+        return $this->enseignant;
+    }
+
+    public function setEnseignant(?Enseignant $enseignant): static
+    {
+        $this->enseignant = $enseignant;
+        return $this;
+    }
+
+    // Getters and setters for the Promotion relationship
+    public function getPromotion(): ?Promotion
+    {
+        return $this->promotion;
+    }
+
+    public function setPromotion(?Promotion $promotion): static
+    {
+        $this->promotion = $promotion;
         return $this;
     }
 

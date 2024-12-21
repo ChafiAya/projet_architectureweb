@@ -2,6 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Enseignant;
 use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,12 +37,34 @@ class RegistrationController extends AbstractController
             // Set the selected role to the user
             $user->setRoles($roles); // Set the role(s)
 
+            // If the role is "Enseignant", create the Enseignant entity
+            if ($roles === 'Enseignant') {
+                $enseignant = new Enseignant();
+                // Extract first and last names from the email
+                $email = $user->getEmail();
+                $emailParts = explode('@', $email)[0]; // Get the part before '@'
+                $nameParts = explode('.', $emailParts); // Split by '.'
+
+                // Assuming the format "firstName.lastName"
+                if (count($nameParts) >= 2) {
+                    $enseignant->setPrenom(ucfirst($nameParts[1])); 
+                    $enseignant->setNomEnseignant(ucfirst($nameParts[0])); 
+                    $enseignant->setEmailEnseignant($email);
+                }
+
+                // Persist the Enseignant entity
+                $entityManager->persist($enseignant);
+
+                // Set the Enseignant for the user
+                $user->setEnseignant($enseignant);
+            }
+
             // Persist the user entity
             $entityManager->persist($user);
             $entityManager->flush();
 
             // Redirect after successful registration
-            return $this->redirectToRoute('app_enseignant_index');
+            return $this->redirectToRoute('app_reserve_index');
         }
 
         // Render the registration form

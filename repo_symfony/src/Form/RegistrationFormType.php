@@ -6,7 +6,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType; // Import ChoiceType
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -53,16 +53,16 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            // Update roles field to accept an array, even for single choice
+            // Update roles field to accept a single role string
             ->add('roles', ChoiceType::class, [
                 'label' => 'Select your role',
                 'choices' => [
-                    'Enseignant' => 'Enseignant',
-                    'Etudiant' => 'Etudiant',
+                    'Enseignant' => 'Eneignant',
+                    'Etudiant' => 'ROLE_ETUDIANT',
                 ],
                 'expanded' => true,  // Radio buttons for single choice
                 'multiple' => false,  // Ensure only one role can be selected
-                'data' => 'ROLE_USER',  // Default role if not selected
+                'data' => 'ROLE_USER',  // Default role
             ])
         ;
     }
