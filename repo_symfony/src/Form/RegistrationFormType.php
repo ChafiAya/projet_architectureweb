@@ -1,12 +1,12 @@
 <?php
-
 namespace App\Form;
-use App\Entity\Admin;
+
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType; // Import ChoiceType
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -21,7 +21,7 @@ class RegistrationFormType extends AbstractType
             ->add('email', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'autocomplete' => 'email',                     
+                    'autocomplete' => 'email',
                     'class' => 'bg-transparent block mt-10 mx-auto border-b-2 w-1/5 h-20 text-2xl outline-none',
                     'placeholder' => 'Email'
                 ],
@@ -35,12 +35,10 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
                 'label' => false,
                 'mapped' => false,
                 'attr' => [
-                    'autocomplete' => 'new-password',                     
+                    'autocomplete' => 'new-password',
                     'class' => 'bg-transparent block mt-10 mx-auto border-b-2 w-1/5 h-20 text-2xl outline-none',
                     'placeholder' => 'Password'
                 ],
@@ -51,10 +49,20 @@ class RegistrationFormType extends AbstractType
                     new Length([
                         'min' => 6,
                         'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
                 ],
+            ])
+            // Update roles field to accept an array, even for single choice
+            ->add('roles', ChoiceType::class, [
+                'label' => 'Select your role',
+                'choices' => [
+                    'Enseignant' => 'Enseignant',
+                    'Etudiant' => 'Etudiant',
+                ],
+                'expanded' => true,  // Radio buttons for single choice
+                'multiple' => false,  // Ensure only one role can be selected
+                'data' => 'ROLE_USER',  // Default role if not selected
             ])
         ;
     }
