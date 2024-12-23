@@ -87,9 +87,15 @@ final class ReserveController extends AbstractController
                 }
             }
 
+            foreach($selectedSalles as $salle){
+                $salle->setDisponibilite(false);
+                $entityManager->persist($salle);
+            }
+
 
             $entityManager->persist($reserve);
             $entityManager->flush();
+            
 
             return $this->redirectToRoute('app_reserve_index', [], Response::HTTP_SEE_OTHER);
         }
