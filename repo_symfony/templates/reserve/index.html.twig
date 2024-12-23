@@ -5,6 +5,44 @@
 {% block body %}
     <h1>Reserve index</h1>
 
+    <!-- Search Form -->
+    <form method="get" action="{{ path('app_reserve_index') }}">
+        <div>
+            <label for="salle">Salle:</label>
+            <select id="salle" name="salle_id">
+                <option value="">-- Select Salle --</option>
+                {% for salle in salles %}
+                    <option value="{{ salle.id }}" 
+                        {{ app.request.query.get('salle_id') == salle.id ? 'selected' : '' }}>
+                        {{ salle.nomDeSalle }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div>
+            <label for="date_reservation">Date:</label>
+            <input type="date" id="date_reservation" name="date_reservation" 
+                   value="{{ app.request.query.get('date_reservation') }}">
+        </div>
+
+        <div>
+            <label for="promotion">Promotion:</label>
+            <select id="promotion" name="promotion_id">
+                <option value="">-- Select Promotion --</option>
+                {% for promotion in promotions %}
+                    <option value="{{ promotion.id }}" 
+                        {{ app.request.query.get('promotion_id') == promotion.id ? 'selected' : '' }}>
+                        {{ promotion.niveauPromotion }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Reservation Table -->
     <table class="table">
         <thead>
             <tr>
@@ -12,26 +50,86 @@
                 <th>Date_reservation</th>
                 <th>Heure_depart</th>
                 <th>Heure_fin</th>
-                <th>Etat_reservation</th>
-                <th>actions</th>
+                <th>Salles</th>
+                <th>Enseignants</th>
+                <th>Promotions</th>
+                <th>Actions</th>
             </tr>
         </thead>
         <tbody>
+        {% set user = app.user %}
+        
         {% for reserve in reserves %}
-            <tr>
-                <td>{{ reserve.id }}</td>
-                <td>{{ reserve.dateReservation ? reserve.dateReservation|date('Y-m-d') : '' }}</td>
-                <td>{{ reserve.heureDepart ? reserve.heureDepart|date('H:i:s') : '' }}</td>
-                <td>{{ reserve.heureFin ? reserve.heureFin|date('H:i:s') : '' }}</td>
-                <td>{{ reserve.etatReservation }}</td>
-                <td>
-                    <a href="{{ path('app_reserve_show', {'id': reserve.id}) }}">show</a>
-                    <a href="{{ path('app_reserve_edit', {'id': reserve.id}) }}">edit</a>
-                </td>
-            </tr>
+            {% if user and 'Enseignant' in user.roles %}
+                {# Si l'utilisateur est enseignant, on filtre par son email #}
+                {% for enseignant in reserve.enseignants %}
+                    {% if enseignant.emailEnseignant == user.email %}
+                        <tr>
+                            <td>{{ reserve.id }}</td>
+                            <td>{{ reserve.dateReservation ? reserve.dateReservation|date('Y-m-d') : '' }}</td>
+                            <td>{{ reserve.heureDepart ? reserve.heureDepart|date('H:i:s') : '' }}</td>
+                            <td>{{ reserve.heureFin ? reserve.heureFin|date('H:i:s') : '' }}</td>
+                            <td>
+                                {% for salle in reserve.salles %}
+                                    {{ salle.getNomDeSalle() }}{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% for enseignant in reserve.enseignants %}
+                                    {{ enseignant.emailEnseignant }}{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                {% for promotion in reserve.promotion %}
+                                    {{ promotion.getNiveauPromotion() }}{% if not loop.last %}, {% endif %}
+                                {% endfor %}
+                            </td>
+                            <td>
+                                <a href="{{ path('app_reserve_show', {'id': reserve.id}) }}">show</a>
+                                <a href="{{ path('app_reserve_edit', {'id': reserve.id}) }}">edit</a>
+                                <form method="post" action="{{ path('app_reserve_delete', {'id': reserve.id}) }}" style="display:inline;">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reserve.id) }}">
+                                    <button type="submit">delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endif %}
+                {% endfor %}
+            {% else %}
+                {# Si l'utilisateur n'est pas enseignant, on affiche toutes les réservations #}
+                <tr>
+                    <td>{{ reserve.id }}</td>
+                    <td>{{ reserve.dateReservation ? reserve.dateReservation|date('Y-m-d') : '' }}</td>
+                    <td>{{ reserve.heureDepart ? reserve.heureDepart|date('H:i:s') : '' }}</td>
+                    <td>{{ reserve.heureFin ? reserve.heureFin|date('H:i:s') : '' }}</td>
+                    <td>
+                        {% for salle in reserve.salles %}
+                            {{ salle.getNomDeSalle() }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for enseignant in reserve.enseignants %}
+                            {{ enseignant.emailEnseignant }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        {% for promotion in reserve.promotion %}
+                            {{ promotion.getNiveauPromotion() }}{% if not loop.last %}, {% endif %}
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <a href="{{ path('app_reserve_show', {'id': reserve.id}) }}">show</a>
+                        <a href="{{ path('app_reserve_edit', {'id': reserve.id}) }}">edit</a>
+                        <form method="post" action="{{ path('app_reserve_delete', {'id': reserve.id}) }}" style="display:inline;">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reserve.id) }}">
+                            <button type="submit">delete</button>
+                        </form>
+                    </td>
+                </tr>
+            {% endif %}
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="9">No records found</td>
             </tr>
         {% endfor %}
         </tbody>

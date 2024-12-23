@@ -25,9 +25,6 @@ class Sale
     private ?string $nom_de_salle = null;
 
     #[ORM\Column]
-    private ?bool $disponibilite = null;
-
-    #[ORM\Column]
     private ?int $capacite = null;
 
     /**
@@ -78,18 +75,6 @@ class Sale
     public function setNomDeSalle(string $nom_de_salle): static
     {
         $this->nom_de_salle = $nom_de_salle;
-
-        return $this;
-    }
-
-    public function isDisponibilite(): ?bool
-    {
-        return $this->disponibilite;
-    }
-
-    public function setDisponibilite(bool $disponibilite): static
-    {
-        $this->disponibilite = $disponibilite;
 
         return $this;
     }

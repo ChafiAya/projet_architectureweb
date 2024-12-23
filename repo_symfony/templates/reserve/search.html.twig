@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Search Reservations{% endblock %}
+
+{% block body %}
+    <h1>Search for Reservations by Room</h1>
+
+    {{ form_start(form) }}
+        {{ form_row(form.salle) }}
+        <button type="submit">Search</button>
+    {{ form_end(form) }}
+{% endblock %}

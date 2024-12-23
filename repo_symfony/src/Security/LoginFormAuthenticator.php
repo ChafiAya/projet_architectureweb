@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,9 +49,23 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // For example:
-        return new RedirectResponse($this->urlGenerator->generate('app_enseignant_index'));
-        // throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+        // Retrieve the roles from the token (which should come from the User object)
+        $user = $token->getUser(); // User object
+        if ($user instanceof User) {
+            $roles = $user->getRoles(); // Get the roles as an array
+            if (in_array('admin', $roles)) {
+                // Redirect to 'app_home' if the user has ROLE_ADMIN
+                return new RedirectResponse($this->urlGenerator->generate('app_home'));
+            }
+
+            if (in_array('Enseignant', $roles)) {
+                // Redirect to 'app_enseignant_index' if the user has ROLE_ENSEIGNANT
+                return new RedirectResponse($this->urlGenerator->generate('app_reserve_index'));
+            }
+        }
+
+        // Default redirection if no roles match
+        return new RedirectResponse($this->urlGenerator->generate('app_default_dashboard'));
     }
 
     protected function getLoginUrl(Request $request): string

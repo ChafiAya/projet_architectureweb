@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Repository;
-
+use App\Entity\User;
 use App\Entity\Enseignant;
 use App\Entity\Promotion;
 use App\Entity\Reserve;
@@ -89,4 +89,47 @@ class ReserveRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findByFilters(?int $salleId, ?string $dateReservation, ?int $promotionId): array
+{
+
+    $qb = $this->createQueryBuilder('r')
+        ->innerJoin('r.salles', 's')
+        ->leftJoin('r.promotion', 'p'); // Left join with promotion to filter if provided
+    
+    // Filter by salle if provided
+    if ($salleId) {
+        $qb->andWhere('s.id = :salleId')
+            ->setParameter('salleId', $salleId);
+    }
+    
+    // Filter by date if provided (ensure the format is correct)
+    if ($dateReservation) {
+        $qb->andWhere('r.date_reservation = :dateReservation')
+            ->setParameter('dateReservation', $dateReservation);
+    }
+    
+    // Filter by promotion if provided
+    if ($promotionId) {
+        $qb->andWhere('p.id = :promotionId')
+            ->setParameter('promotionId', $promotionId);
+    }
+    
+    return $qb->getQuery()->getResult();
+}
+
+public function findByEnseignant(User $enseignant)
+{
+    return $this->createQueryBuilder('r')
+        ->innerJoin('r.enseignants', 'e')
+        ->where('e.id = :enseignantId')
+        ->setParameter('enseignantId', $enseignant->getId())
+        ->getQuery()
+        ->getResult();
+}
+
+
+    
+    
+
 }
