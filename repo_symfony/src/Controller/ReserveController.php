@@ -11,6 +11,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use App\Message\UpdateDisponibiliteMessage;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 #[Route('/reserve')]
 final class ReserveController extends AbstractController
@@ -24,7 +26,7 @@ final class ReserveController extends AbstractController
     }
 
     #[Route('/new', name: 'app_reserve_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, ReserveRepository $reserveRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, ReserveRepository $reserveRepository,MessageBusInterface $bus): Response
     {
         $reserve = new Reserve();
         $form = $this->createForm(ReserveType::class, $reserve);
@@ -48,10 +50,7 @@ final class ReserveController extends AbstractController
                 );
                 if(count($conflitEnseignant)>0){
                     $this->addFlash('error',sprintf('Vous avez  déjà une réservation durant cette période.'));
-                    return $this->render('reserve/new.html.twig', [
-                        'reserve' => $reserve,
-                        'form' => $form,
-                    ]);
+                    return $this->redirectToRoute('app_reserve_new');
                 }
             }
 
@@ -61,15 +60,12 @@ final class ReserveController extends AbstractController
                     $fincConflicatCapacity = $reserveRepository->findConflictCapacityClassRoom($salles,$promo);
                     if(count($fincConflicatCapacity)>0){
                         $this->addFlash('error', sprintf(
-                            'La salle ne peut pas accueillir la promotion car la capacité maximale est insuffisante pour %d étudiants.',
+                            'La salle ne peut pas accueillir la promotion car la capacité maximale est insuffisante pour les étudiants.',
 
                             )
                         );
 
-                        return $this->render('reserve/new.html.twig',[
-                            'reserve' => $reserve,
-                            'form' => $form,
-                        ]);
+                        return $this->redirectToRoute('app_reserve_new');
                     }
                 }
             }
@@ -78,18 +74,38 @@ final class ReserveController extends AbstractController
             foreach($selectedSalles as $sale ){
                 $conflitReservation = $reserveRepository->findConflictingReservations($sale,$selectDate_reservation,$selectHeureDebut,$selectHeureFin);
                 if(count($conflitReservation)>0){
-                    $this->addFlash('error', 'The selected room is already reserved during the specified time.');
-                    return $this->render('reserve/new.html.twig',[      
-                        'conflitReservation'=> $conflitReservation,         
-                        'reserve' => $reserve,
-                        'form' => $form,
-                ]);
+                    $this->addFlash('error', 'La salle est deja selectionner par un autre enseignant. Veillez prendre un autre creneau SVP!.');
+                    
+                    return $this->redirectToRoute('app_reserve_new');
                 }
             }
 
             foreach($selectedSalles as $salle){
-                $salle->setDisponibilite(false);
+                $salle->updateDisponibilite();
                 $entityManager->persist($salle);
+            }
+
+            //planification de la mis a jour apres la fin de la reservation 
+            //parcour des salles
+            foreach ($selectedSalles as $salle) {
+                //heur fin 
+                $endTime = clone $reserve->getHeureFin();
+                $dateReservation = $reserve->getDateReservation();
+
+                if (!$endTime || !$dateReservation) {
+                    throw new \InvalidArgumentException('Heure de fin ou date de réservation invalide.');
+                }
+                if (!$endTime instanceof \DateTime) {
+                    $endTime = new \DateTime($endTime->format('Y-m-d H:i:s'));
+                }
+
+                $endTime->setDate(
+                    $reserve->getDateReservation()->format('Y'),
+                    $reserve->getDateReservation()->format('m'),
+                    $reserve->getDateReservation()->format('d')
+                );
+                //dispache de message pour mettre a jour la disponibilite de salle
+                $bus->dispatch(new UpdateDisponibiliteMessage($salle->getId()));
             }
 
 
