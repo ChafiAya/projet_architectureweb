@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Entity;
-
 use App\Repository\ReserveRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -24,9 +23,6 @@ class Reserve
 
     #[ORM\Column(type: Types::TIME_MUTABLE)]
     private ?\DateTimeInterface $heure_fin = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $etat_reservation = null;
 
     /**
      * @var Collection<int, Sale>
@@ -90,18 +86,6 @@ class Reserve
     public function setHeureFin(\DateTimeInterface $heure_fin): static
     {
         $this->heure_fin = $heure_fin;
-
-        return $this;
-    }
-
-    public function getEtatReservation(): ?string
-    {
-        return $this->etat_reservation;
-    }
-
-    public function setEtatReservation(string $etat_reservation): static
-    {
-        $this->etat_reservation = $etat_reservation;
 
         return $this;
     }

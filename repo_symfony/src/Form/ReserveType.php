@@ -25,7 +25,7 @@ class ReserveType extends AbstractType
             ->add('heure_fin', null, [
                 'widget' => 'single_text',
             ])
-            ->add('etat_reservation')
+            
             ->add('salles', EntityType::class, [
                 'class' => Sale::class,
                 'choice_label' => 'nom_de_salle',

@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Reservations for {{ salle.nom }}{% endblock %}
+
+{% block body %}
+    <h1>Reservations for {{ salle.nom }}</h1>
+
+    {% if reservations is empty %}
+        <p>No reservations found for this room.</p>
+    {% else %}
+        <ul>
+            {% for reservation in reservations %}
+                <li>{{ reservation.date_reservation|date('Y-m-d') }} - {{ reservation.heure_depart|date('H:i') }} to {{ reservation.heure_fin|date('H:i') }} - {{ reservation.etat_reservation }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+{% endblock %}

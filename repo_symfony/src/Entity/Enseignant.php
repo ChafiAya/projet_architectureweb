@@ -7,7 +7,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
-
 #[ORM\Entity(repositoryClass: EnseignantRepository::class)]
 class Enseignant
 {
@@ -25,7 +24,7 @@ class Enseignant
     #[ORM\Column(length: 255)]
     private ?string $email_enseignant = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     private ?string $departement = null;
 
     /**
@@ -92,7 +91,7 @@ class Enseignant
         return $this->departement;
     }
 
-    public function setDepartement(string $departement): static
+    public function setDepartement(?string $departement): static
     {
         $this->departement = $departement;
 
@@ -152,5 +151,4 @@ class Enseignant
 
         return $this;
     }
-   
 }

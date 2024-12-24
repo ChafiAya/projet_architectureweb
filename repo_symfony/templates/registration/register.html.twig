@@ -12,17 +12,21 @@
             {{ form_start(registrationForm) }}
                 {{ form_row(registrationForm.email) }}
                 {{ form_row(registrationForm.plainPassword) }}
-            
-            {{ form_row(registrationForm.agreeTerms) }}
+                {{ form_row(registrationForm.roles) }}
+                
+                {# Add the promotion field here #}
+                {{ form_row(registrationForm.promotion) }}
+                
+                {{ form_row(registrationForm.agreeTerms) }}
             
             <button 
                 type="submit" 
-                class="uppercase mt-15 bg-blue-500 text-gray-100 text-lg w-1/5 mt-10 font-extrabold py-4 px-8 rounded-3xl">
+                class="uppercase bg-blue-500 text-gray-100 text-lg w-1/5 mt-10 font-extrabold py-4 px-8 rounded-3xl">
                 Register
             </button>
             
             {{ form_end(registrationForm) }}
-
         </div>
     </div>
 {% endblock %}
+

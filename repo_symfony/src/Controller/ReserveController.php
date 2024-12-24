@@ -4,29 +4,56 @@ namespace App\Controller;
 
 use App\Entity\Reserve;
 use App\Entity\Sale;
+use App\Entity\Promotion;
 use App\Form\ReserveType;
 use App\Repository\ReserveRepository;
+use App\Repository\SaleRepository;
+use App\Repository\PromotionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use App\Message\UpdateDisponibiliteMessage;
-use Symfony\Component\Messenger\MessageBusInterface;
 
 #[Route('/reserve')]
 final class ReserveController extends AbstractController
 {
-    #[Route(name: 'app_reserve_index', methods: ['GET'])]
-    public function index(ReserveRepository $reserveRepository): Response
+
+    #[Route('/', name: 'app_reserve_index', methods: ['GET'])]
+    public function index(Request $request, ReserveRepository $reserveRepository, SaleRepository $saleRepository, PromotionRepository $promotionRepository): Response
     {
+        // Get 'salle_id', 'date_reservation', and 'promotion_id' from the request query parameters
+        $salleId = $request->query->get('salle_id');
+        $dateReservation = $request->query->get('date_reservation');
+        $promotionId = $request->query->get('promotion_id');
+    
+        // Cast 'salle_id' and 'promotion_id' to integer if they are not empty or null
+        $salleId = $salleId ? (int) $salleId : null;
+        $promotionId = $promotionId ? (int) $promotionId : null;
+    
+        // Fetch reservations based on salle_id, date_reservation, and promotion_id if provided
+        $reserves = $reserveRepository->findByFilters($salleId, $dateReservation, $promotionId);
+    
+        // Fetch all salles and promotions for the dropdown
+        $salles = $saleRepository->findAll();
+        $promotions = $promotionRepository->findAll();
+    
+        // Render the template with reserves, salles, promotions, and selected filters
         return $this->render('reserve/index.html.twig', [
-            'reserves' => $reserveRepository->findAll(),
+            'reserves' => $reserves,
+            'salles' => $salles,
+            'promotions' => $promotions,
+            'salleId' => $salleId, // Pass the selected salle ID to highlight in dropdown
+            'dateReservation' => $dateReservation, // Pass the selected date to highlight in input field
+            'promotionId' => $promotionId, // Pass the selected promotion ID
         ]);
     }
+    
+
+
 
     #[Route('/new', name: 'app_reserve_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, ReserveRepository $reserveRepository,MessageBusInterface $bus): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, ReserveRepository $reserveRepository): Response
     {
         $reserve = new Reserve();
         $form = $this->createForm(ReserveType::class, $reserve);
@@ -34,38 +61,36 @@ final class ReserveController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
 
-            //recuperer data de la Reserve
+            // Retrieve data from Reserve
             $selectedSalles = $reserve->getSalles();
             $selectedEnseignants = $reserve->getEnseignants();
             $selectDate_reservation = $reserve->getDateReservation();
             $selectHeureDebut = $reserve->getHeureDepart();
             $selectHeureFin = $reserve->getHeureFin();     
             $selectedPromotion = $reserve->getPromotion();  
-            
 
-            
-            foreach($selectedEnseignants as $enseignant){
+            // Check for conflicts for each Enseignant
+            foreach ($selectedEnseignants as $enseignant) {
                 $conflitEnseignant = $reserveRepository->findConflictingReservationsForEnseignant(
                     $enseignant, $selectDate_reservation, $selectHeureDebut, $selectHeureFin
                 );
                 if(count($conflitEnseignant)>0){
                     $this->addFlash('error',sprintf('Vous avez  déjà une réservation durant cette période.'));
-                    return $this->redirectToRoute('app_reserve_new');
+                    $this->redirectToRoute('app_reserve_new');
                 }
             }
 
-            //verifier le conflit de capasiter de salle avec le nombre d'etudaint 
-            foreach($selectedSalles as $salles){
-                foreach($selectedPromotion as $promo){
-                    $fincConflicatCapacity = $reserveRepository->findConflictCapacityClassRoom($salles,$promo);
-                    if(count($fincConflicatCapacity)>0){
+            // Check for classroom capacity conflicts
+            foreach ($selectedSalles as $salle) {
+                foreach ($selectedPromotion as $promo) {
+                    $conflictCapacity = $reserveRepository->findConflictCapacityClassRoom($salle, $promo);
+                    if (count($conflictCapacity) > 0) {
                         $this->addFlash('error', sprintf(
-                            'La salle ne peut pas accueillir la promotion car la capacité maximale est insuffisante pour les étudiants.',
+                            'La salle ne peut pas accueillir la promotion car la capacité maximale est insuffisante pour %d étudiants.',
 
-                            )
-                        );
+                        ));
 
-                        return $this->redirectToRoute('app_reserve_new');
+                        $this->redirectToRoute('app_reserve_new');
                     }
                 }
             }
@@ -74,41 +99,12 @@ final class ReserveController extends AbstractController
             foreach($selectedSalles as $sale ){
                 $conflitReservation = $reserveRepository->findConflictingReservations($sale,$selectDate_reservation,$selectHeureDebut,$selectHeureFin);
                 if(count($conflitReservation)>0){
-                    $this->addFlash('error', 'La salle est deja selectionner par un autre enseignant. Veillez prendre un autre creneau SVP!.');
-                    
+                    $this->addFlash('error', 'The selected room is already reserved during the specified time.');
                     return $this->redirectToRoute('app_reserve_new');
                 }
             }
 
-            foreach($selectedSalles as $salle){
-                $salle->updateDisponibilite();
-                $entityManager->persist($salle);
-            }
-
-            //planification de la mis a jour apres la fin de la reservation 
-            //parcour des salles
-            foreach ($selectedSalles as $salle) {
-                //heur fin 
-                $endTime = clone $reserve->getHeureFin();
-                $dateReservation = $reserve->getDateReservation();
-
-                if (!$endTime || !$dateReservation) {
-                    throw new \InvalidArgumentException('Heure de fin ou date de réservation invalide.');
-                }
-                if (!$endTime instanceof \DateTime) {
-                    $endTime = new \DateTime($endTime->format('Y-m-d H:i:s'));
-                }
-
-                $endTime->setDate(
-                    $reserve->getDateReservation()->format('Y'),
-                    $reserve->getDateReservation()->format('m'),
-                    $reserve->getDateReservation()->format('d')
-                );
-                //dispache de message pour mettre a jour la disponibilite de salle
-                $bus->dispatch(new UpdateDisponibiliteMessage($salle->getId()));
-            }
-
-
+            // Save the reservation
             $entityManager->persist($reserve);
             $entityManager->flush();
             
@@ -151,11 +147,14 @@ final class ReserveController extends AbstractController
     #[Route('/{id}', name: 'app_reserve_delete', methods: ['POST'])]
     public function delete(Request $request, Reserve $reserve, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$reserve->getId(), $request->getPayload()->getString('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $reserve->getId(), $request->request->get('_token'))) {
             $entityManager->remove($reserve);
             $entityManager->flush();
         }
 
         return $this->redirectToRoute('app_reserve_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    
 }
+

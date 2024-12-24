@@ -1,12 +1,13 @@
 <?php
-
 namespace App\Form;
-use App\Entity\Admin;
+
 use App\Entity\User;
+use App\Repository\PromotionRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
@@ -15,13 +16,20 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationFormType extends AbstractType
 {
+    private PromotionRepository $promotionRepository;
+
+    public function __construct(PromotionRepository $promotionRepository)
+    {
+        $this->promotionRepository = $promotionRepository;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('email', TextType::class, [
                 'label' => false,
                 'attr' => [
-                    'autocomplete' => 'email',                     
+                    'autocomplete' => 'email',
                     'class' => 'bg-transparent block mt-10 mx-auto border-b-2 w-1/5 h-20 text-2xl outline-none',
                     'placeholder' => 'Email'
                 ],
@@ -35,12 +43,10 @@ class RegistrationFormType extends AbstractType
                 ],
             ])
             ->add('plainPassword', PasswordType::class, [
-                // instead of being set onto the object directly,
-                // this is read and encoded in the controller
                 'label' => false,
                 'mapped' => false,
                 'attr' => [
-                    'autocomplete' => 'new-password',                     
+                    'autocomplete' => 'new-password',
                     'class' => 'bg-transparent block mt-10 mx-auto border-b-2 w-1/5 h-20 text-2xl outline-none',
                     'placeholder' => 'Password'
                 ],
@@ -51,12 +57,45 @@ class RegistrationFormType extends AbstractType
                     new Length([
                         'min' => 6,
                         'minMessage' => 'Your password should be at least {{ limit }} characters',
-                        // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
                 ],
             ])
-        ;
+            ->add('roles', ChoiceType::class, [
+                'label' => 'Select your role',
+                'choices' => [
+                    'Enseignant' => 'Enseignant',
+                    'Etudiant' => 'Etudiant',
+                ],
+                'expanded' => true,
+                'multiple' => false,
+                'data' => 'ROLE_USER',
+            ])
+            ->add('promotion', ChoiceType::class, [
+                'label' => 'Choose your Promotion',
+                'mapped' => false,
+                'choices' => $this->getPromotionChoices(),
+                'expanded' => false,
+                'multiple' => false,
+                'placeholder' => 'Select your Promotion',
+                'required' => false,
+            ]);
+    }
+
+    private function getPromotionChoices(): array
+    {
+        $promotions = $this->promotionRepository->findAll();
+        $choices = [];
+
+        foreach ($promotions as $promotion) {
+            $label = $promotion->getNiveauPromotion() . ' - ' . $promotion->getEnseignement();
+            if (!$label) {
+                $label = 'Unknown Promotion';  
+            }
+            $choices[$label] = $promotion->getId();
+        }
+
+        return $choices;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -66,3 +105,4 @@ class RegistrationFormType extends AbstractType
         ]);
     }
 }
+

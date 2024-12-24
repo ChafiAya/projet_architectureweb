@@ -17,8 +17,7 @@ class SaleType extends AbstractType
             ->add('batiment')
             ->add('etage')
             ->add('nom_de_salle')
-            ->add('disponibilite')
-            ->add('capacite')
+           ->add('capacite')
             // ->add('reserves', EntityType::class, [
             //     'class' => Reserve::class,
             //     'choice_label' => 'id',

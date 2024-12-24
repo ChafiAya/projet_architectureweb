@@ -25,9 +25,6 @@ class Sale
     private ?string $nom_de_salle = null;
 
     #[ORM\Column]
-    private ?bool $disponibilite = null;
-
-    #[ORM\Column]
     private ?int $capacite = null;
 
     /**
@@ -82,18 +79,6 @@ class Sale
         return $this;
     }
 
-    public function isDisponibilite(): ?bool
-    {
-        return $this->disponibilite;
-    }
-
-    public function setDisponibilite(bool $disponibilite): static
-    {
-        $this->disponibilite = $disponibilite;
-
-        return $this;
-    }
-
     public function getCapacite(): ?int
     {
         return $this->capacite;
@@ -135,23 +120,6 @@ class Sale
 
     //fonction pour la gestion de disponibilite de la salle 
 
-    public function updateDisponibilite(): void
-    {
-        $currentDateTime = new \DateTime();
-
-        foreach ($this->reserves as $reservation) {
-            
-            if ($reservation->getDateReservation() == $currentDateTime->format('Y-m-d') &&
-                $currentDateTime >= $reservation->getHeureDepart() &&
-                $currentDateTime <= $reservation->getHeureFin()) {
-                $this->disponibilite = false;
-                return;
-            }
-        }
-
-        
-        $this->disponibilite = true;
-    }
 
     public function isDisponible(\DateTimeInterface $currentDateTime): bool
     {
