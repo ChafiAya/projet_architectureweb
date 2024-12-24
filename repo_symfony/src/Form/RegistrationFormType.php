@@ -2,6 +2,7 @@
 namespace App\Form;
 
 use App\Entity\User;
+use App\Repository\PromotionRepository;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -15,6 +16,13 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 
 class RegistrationFormType extends AbstractType
 {
+    private PromotionRepository $promotionRepository;
+
+    public function __construct(PromotionRepository $promotionRepository)
+    {
+        $this->promotionRepository = $promotionRepository;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
@@ -53,18 +61,41 @@ class RegistrationFormType extends AbstractType
                     ]),
                 ],
             ])
-            // Update roles field to accept a single role string
             ->add('roles', ChoiceType::class, [
                 'label' => 'Select your role',
                 'choices' => [
-                    'Enseignant' => 'Eneignant',
-                    'Etudiant' => 'ROLE_ETUDIANT',
+                    'Enseignant' => 'Enseignant',
+                    'Etudiant' => 'Etudiant',
                 ],
-                'expanded' => true,  // Radio buttons for single choice
-                'multiple' => false,  // Ensure only one role can be selected
-                'data' => 'ROLE_USER',  // Default role
+                'expanded' => true,
+                'multiple' => false,
+                'data' => 'ROLE_USER',
             ])
-        ;
+            ->add('promotion', ChoiceType::class, [
+                'label' => 'Choose your Promotion',
+                'mapped' => false,
+                'choices' => $this->getPromotionChoices(),
+                'expanded' => false,
+                'multiple' => false,
+                'placeholder' => 'Select your Promotion',
+                'required' => false,
+            ]);
+    }
+
+    private function getPromotionChoices(): array
+    {
+        $promotions = $this->promotionRepository->findAll();
+        $choices = [];
+
+        foreach ($promotions as $promotion) {
+            $label = $promotion->getNiveauPromotion() . ' - ' . $promotion->getEnseignement();
+            if (!$label) {
+                $label = 'Unknown Promotion';  
+            }
+            $choices[$label] = $promotion->getId();
+        }
+
+        return $choices;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -74,3 +105,4 @@ class RegistrationFormType extends AbstractType
         ]);
     }
 }
+

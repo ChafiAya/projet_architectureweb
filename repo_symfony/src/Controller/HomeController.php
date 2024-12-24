@@ -62,6 +62,7 @@ class HomeController extends AbstractController
                             <li><a href="/promotion">promotion</a></li>
                             <li><a href="/sale">salle</li>
                             <li><a href="/reserve">reservation</a></li>
+                            <li><a href="/register">registration of student or teacher</a></li>
                            
                         </ul>
                     </div>

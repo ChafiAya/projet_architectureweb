@@ -2,7 +2,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Entity\Enseignant;
+use App\Entity\Promotion;
 use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class RegistrationController extends AbstractController
 {
@@ -18,45 +19,44 @@ class RegistrationController extends AbstractController
     {
         $user = new User();
         $form = $this->createForm(RegistrationFormType::class, $user);
+
+        // Retrieve promotions based on the selected role (only for "Etudiant")
+        if ($user->getRoles() === 'Etudiant') {
+            // Retrieve promotions and format them as "niveau_promotion + enseignement"
+            $promotions = $entityManager->getRepository(Promotion::class)->findAll();
+            $promotionChoices = [];
+
+            foreach ($promotions as $promotion) {
+                $promotionChoices[$promotion->getNiveauPromotion() . ' - ' . $promotion->getEnseignement()] = $promotion->getId();
+            }
+
+            // Add the dynamic promotion choices to the form
+            $form->add('promotion', ChoiceType::class, [
+                'label' => 'Select your promotion',
+                'choices' => $promotionChoices,
+                'mapped' => false, // We do not map it to the user entity directly
+                'expanded' => false,
+                'multiple' => false,
+            ]);
+        }
+
         $form->handleRequest($request);
 
-        // Check if the form was submitted and is valid
         if ($form->isSubmitted() && $form->isValid()) {
-            // Get the plain password from the form
+            // Hash the password
             $plainPassword = $form->get('plainPassword')->getData();
-
-            // Hash the plain password using Symfony's UserPasswordHasherInterface
             $hashedPassword = $userPasswordHasher->hashPassword($user, $plainPassword);
-
-            // Set the hashed password to the user entity
             $user->setPassword($hashedPassword);
 
-            // Get the selected role from the form (this now works with 'roles')
-            $roles = $form->get('roles')->getData(); // Get the selected role
+            // Get the selected role and set it
+            $roles = $form->get('roles')->getData();
+            $user->setRoles($roles);
 
-            // Set the selected role to the user
-            $user->setRoles($roles); // Set the role(s)
-
-            // If the role is "Enseignant", create the Enseignant entity
-            if ($roles === 'Enseignant') {
-                $enseignant = new Enseignant();
-                // Extract first and last names from the email
-                $email = $user->getEmail();
-                $emailParts = explode('@', $email)[0]; // Get the part before '@'
-                $nameParts = explode('.', $emailParts); // Split by '.'
-
-                // Assuming the format "firstName.lastName"
-                if (count($nameParts) >= 2) {
-                    $enseignant->setPrenom(ucfirst($nameParts[1])); 
-                    $enseignant->setNomEnseignant(ucfirst($nameParts[0])); 
-                    $enseignant->setEmailEnseignant($email);
-                }
-
-                // Persist the Enseignant entity
-                $entityManager->persist($enseignant);
-
-                // Set the Enseignant for the user
-                $user->setEnseignant($enseignant);
+            // Handle the selected promotion for Etudiant
+            if ($roles === 'Etudiant') {
+                $promotionId = $form->get('promotion')->getData();
+                $promotion = $entityManager->getRepository(Promotion::class)->find($promotionId);
+                $user->setPromotion($promotion);
             }
 
             // Persist the user entity
@@ -67,9 +67,9 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_reserve_index');
         }
 
-        // Render the registration form
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
     }
 }
+
