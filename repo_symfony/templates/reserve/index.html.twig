@@ -3,20 +3,23 @@
 {% block title %}Reservation{% endblock %}
 
 {% block body %}
-    <h1>Reservationc salle de cours</h1>
-
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Date_reservation</th>
-                <th>Heure_depart</th>
-                <th>Heure_fin</th>
-                <th>Etat_reservation</th>
-                <th>Nom Enseignant</th> 
-                <th>Promotion</th>
-                <th>Salle</th>
-                <th>actions</th>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Reservationc salle de cours</h1>
+    <div class="mb-3">
+        <a href="{{ path('app_reserve_new') }}" class="btn btn-success">Cree une nouvelle reservation</a>
+    </div>
+    <table class="table table-striped table-bordered">
+        <thead class="thead-dark">
+            <tr >
+                <th scope="col">Id</th>
+                <th scope="col">Date_reservation</th>
+                <th scope="col">Heure_depart</th>
+                <th scope="col">Heure_fin</th>
+                <th scope="col">Etat_reservation</th>
+                <th scope="col">Nom Enseignant</th> 
+                <th scope="col">Promotion</th>
+                <th scope="col">Salle</th>
+                <th scope="col">actions</th>
             </tr>
         </thead>
         <tbody>
@@ -43,5 +46,6 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_reserve_new') }}">Cree une nouvelle reservation</a>
+
+</div>
 {% endblock %}

@@ -1,15 +1,23 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Reserve{% endblock %}
+{% block title %}Nouvelle Réservation{% endblock %}
 
 {% block body %}
+<div class="container mt-5">
     {% for message in app.flashes('error') %}
+        <div class="alert alert-danger" role="alert">
             {{ message }}
+        </div>
     {% endfor %}
 
-    <h1>CREE UNE NOUVELLE RESERVATION</h1>
+    <h1 class="text-center mb-4">Créer une Nouvelle Réservation</h1>
 
-    {{ include('reserve/_form.html.twig') }}
+    <div class="card shadow-sm p-4">
+        {{ include('reserve/_form.html.twig') }}
+    </div>
 
-    <a href="{{ path('app_reserve_index') }}">Retour a la liste</a>
+    <div class="mt-4 text-end">
+        <a href="{{ path('app_reserve_index') }}" class="btn btn-secondary">Retour à la liste</a>
+    </div>
+</div>
 {% endblock %}
