@@ -83,4 +83,14 @@ final class EnseignantController extends AbstractController
 
         return $this->redirectToRoute('app_enseignant_index', [], Response::HTTP_SEE_OTHER);
     }
+    #[Route('/enseignant/planning', name: 'enseignant_planning')]
+    public function planning(): Response
+    {
+    // Ajoutez la logique pour afficher le planning de l'enseignant connecté
+        return $this->render('enseignant/planning.html.twig', [
+            'controller_name' => 'EnseignantController',
+        ]);
+    }
+
 }
+?>

@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controller;
 
 use App\Entity\User;
@@ -17,57 +18,60 @@ class RegistrationController extends AbstractController
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
         $user = new User();
+
+        // Création du formulaire d'inscription avec l'entité User
         $form = $this->createForm(RegistrationFormType::class, $user);
         $form->handleRequest($request);
 
-        // Check if the form was submitted and is valid
+        // Vérifie si le formulaire a été soumis et est valide
         if ($form->isSubmitted() && $form->isValid()) {
-            // Get the plain password from the form
+            // Récupération et hashage du mot de passe
             $plainPassword = $form->get('plainPassword')->getData();
-
-            // Hash the plain password using Symfony's UserPasswordHasherInterface
             $hashedPassword = $userPasswordHasher->hashPassword($user, $plainPassword);
-
-            // Set the hashed password to the user entity
             $user->setPassword($hashedPassword);
 
-            // Get the selected role from the form (this now works with 'roles')
-            $roles = $form->get('roles')->getData(); // Get the selected role
+            // Récupération du type d'utilisateur sélectionné (typeUtilisateur)
+            $typeUtilisateur = $form->get('typeUtilisateur')->getData();
 
-            // Set the selected role to the user
-            $user->setRoles($roles); // Set the role(s)
+            // Attribution des rôles selon le type d'utilisateur
+            switch ($typeUtilisateur) {
+                case 'ROLE_ETUDIANT':
+                    $user->setRoles(['ROLE_ETUDIANT']);
+                    break;
 
-            // If the role is "Enseignant", create the Enseignant entity
-            if ($roles === 'Enseignant') {
-                $enseignant = new Enseignant();
-                // Extract first and last names from the email
-                $email = $user->getEmail();
-                $emailParts = explode('@', $email)[0]; // Get the part before '@'
-                $nameParts = explode('.', $emailParts); // Split by '.'
+                case 'ROLE_ENSEIGNANT':
+                    $user->setRoles(['ROLE_ENSEIGNANT']);
 
-                // Assuming the format "firstName.lastName"
-                if (count($nameParts) >= 2) {
-                    $enseignant->setPrenom(ucfirst($nameParts[1])); 
-                    $enseignant->setNomEnseignant(ucfirst($nameParts[0])); 
-                    $enseignant->setEmailEnseignant($email);
-                }
+                    // Création de l'entité Enseignant si le rôle est Enseignant
+                    $enseignant = new Enseignant();
+                    $enseignant->setNomEnseignant($form->get('nom')->getData());
+                    $enseignant->setPrenom($form->get('prenom')->getData());
+                    $enseignant->setEmailEnseignant($user->getEmail());
 
-                // Persist the Enseignant entity
-                $entityManager->persist($enseignant);
+                    // Enregistre l'entité Enseignant
+                    $entityManager->persist($enseignant);
 
-                // Set the Enseignant for the user
-                $user->setEnseignant($enseignant);
+                    // Lie l'utilisateur à l'entité Enseignant
+                    $user->setEnseignant($enseignant);
+                    break;
+
+                case 'ROLE_AGENT':
+                    $user->setRoles(['ROLE_AGENT']);
+                    break;
+
+                default:
+                    throw new \LogicException('Type d\'utilisateur inconnu.');
             }
 
-            // Persist the user entity
+            // Persiste l'utilisateur dans la base de données
             $entityManager->persist($user);
             $entityManager->flush();
 
-            // Redirect after successful registration
+            // Redirection après une inscription réussie
             return $this->redirectToRoute('app_reserve_index');
         }
 
-        // Render the registration form
+        // Rend le formulaire d'inscription
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);

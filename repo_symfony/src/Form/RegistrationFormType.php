@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Form;
 
 use App\Entity\User;
@@ -18,6 +19,7 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            // Champ Email
             ->add('email', TextType::class, [
                 'label' => false,
                 'attr' => [
@@ -26,51 +28,84 @@ class RegistrationFormType extends AbstractType
                     'placeholder' => 'Email'
                 ],
             ])
+            
+            // Champ Nom
+            ->add('nom', TextType::class, [
+                'label' => 'Nom',
+                'attr' => [
+                    'class' => 'bg-transparent block mt-10 mx-auto border-b-2 w-1/5 h-20 text-2xl outline-none',
+                    'placeholder' => 'Nom'
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez entrer votre nom.',
+                    ]),
+                ],
+            ])
+            
+            // Champ Prénom
+            ->add('prenom', TextType::class, [
+                'label' => 'Prénom',
+                'attr' => [
+                    'class' => 'bg-transparent block mt-10 mx-auto border-b-2 w-1/5 h-20 text-2xl outline-none',
+                    'placeholder' => 'Prénom'
+                ],
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Veuillez entrer votre prénom.',
+                    ]),
+                ],
+            ])
+            
+            // Choix du type d'utilisateur
+            ->add('typeUtilisateur', ChoiceType::class, [
+                'label' => 'Type d\'utilisateur',
+                'choices' => [
+                    'Étudiant' => 'ROLE_ETUDIANT',
+                    'Enseignant' => 'ROLE_ENSEIGNANT',
+                    'Agent Universitaire' => 'ROLE_AGENT',
+                ],
+                'attr' => [
+                    'class' => 'bg-transparent block mt-10 mx-auto border-b-2 w-1/5 h-20 text-2xl outline-none',
+                ],
+            ])
+            
+            // Accepter les conditions
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'Vous devez accepter nos conditions.',
                     ]),
                 ],
             ])
+            
+            // Champ Mot de passe
             ->add('plainPassword', PasswordType::class, [
                 'label' => false,
                 'mapped' => false,
                 'attr' => [
                     'autocomplete' => 'new-password',
                     'class' => 'bg-transparent block mt-10 mx-auto border-b-2 w-1/5 h-20 text-2xl outline-none',
-                    'placeholder' => 'Password'
+                    'placeholder' => 'Mot de passe'
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Veuillez entrer un mot de passe.',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'Votre mot de passe doit contenir au moins {{ limit }} caractères.',
                         'max' => 4096,
                     ]),
                 ],
-            ])
-            // Update roles field to accept a single role string
-            ->add('roles', ChoiceType::class, [
-                'label' => 'Select your role',
-                'choices' => [
-                    'Enseignant' => 'Eneignant',
-                    'Etudiant' => 'ROLE_ETUDIANT',
-                ],
-                'expanded' => true,  // Radio buttons for single choice
-                'multiple' => false,  // Ensure only one role can be selected
-                'data' => 'ROLE_USER',  // Default role
-            ])
-        ;
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => User::class,
+            'data_class' => User::class, // Associe ce formulaire à l'entité User
         ]);
     }
 }

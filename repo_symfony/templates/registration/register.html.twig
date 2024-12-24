@@ -1,24 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription{% endblock %} {# Modification du titre pour correspondre à l'inscription en français #}
 
 {% block body %}
     <div class="w-4/5 m-auto text-center">
         <div class="py-12 border-b border-gray-200">
             <h1 class="text-6xl pt-12 pb-8">
-                Register
+                Inscription {# Texte modifié pour afficher le titre en français #}
             </h1>
 
             {{ form_start(registrationForm) }}
-                {{ form_row(registrationForm.email) }}
-                {{ form_row(registrationForm.plainPassword) }}
-                {{ form_row(registrationForm.roles) }} 
-                {{ form_row(registrationForm.agreeTerms) }}
+                {{ form_row(registrationForm.nom) }} {# Ajout du champ pour le nom de l'utilisateur #}
+                {{ form_row(registrationForm.prenom) }} {# Ajout du champ pour le prénom de l'utilisateur #}
+                {{ form_row(registrationForm.typeUtilisateur) }} {# Ajout du champ pour le type d'utilisateur (Etudiant, Enseignant, Agent) #}
+                {{ form_row(registrationForm.email) }} {# Champ pour l'email déjà présent #}
+                {{ form_row(registrationForm.plainPassword) }} {# Champ pour le mot de passe déjà présent #}
+                {{ form_row(registrationForm.agreeTerms) }} {# Checkbox pour accepter les conditions d'utilisation #}
             
             <button 
                 type="submit" 
                 class="uppercase mt-15 bg-blue-500 text-gray-100 text-lg w-1/5 mt-10 font-extrabold py-4 px-8 rounded-3xl">
-                Register
+                S'inscrire {# Bouton modifié pour afficher "S'inscrire" en français #}
             </button>
             
             {{ form_end(registrationForm) }}

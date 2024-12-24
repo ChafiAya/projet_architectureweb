@@ -27,44 +27,60 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
     {
     }
 
+    // Gére l'authentification
     public function authenticate(Request $request): Passport
     {
-        $email = $request->getPayload()->getString('email');
+        $email = $request->get('email');
+        $password = $request->get('password');
+        $csrfToken = $request->get('_csrf_token');
 
+        // on garde email en cas d'échec de connexion
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
 
+        // Pour débug
+        dump($request->request->all());
+
         return new Passport(
-            new UserBadge($email),
-            new PasswordCredentials($request->getPayload()->getString('password')),
+            new UserBadge($email), // Vérifie si le mail existe
+            new PasswordCredentials($password), // Vérifie le mdp
             [
-                new CsrfTokenBadge('authenticate', $request->getPayload()->getString('_csrf_token')),
-                new RememberMeBadge(),
+                new CsrfTokenBadge('authenticate', $csrfToken), // Vérifie le token CSRF
+                new RememberMeBadge(), //Pour se souvenir de l'user
             ]
         );
     }
 
+    // Fonction en cas de réussite de l'authentification
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
 
-        // Retrieve the roles from the token (which should come from the User object)
-        $user = $token->getUser(); // User object
+        // On récupère les rôles de l'utilisateur
+        $user = $token->getUser();
         if ($user instanceof User) {
-            $roles = $user->getRoles(); // Get the roles as an array
-            if (in_array('admin', $roles)) {
-                // Redirect to 'app_home' if the user has ROLE_ADMIN
+            $roles = $user->getRoles();
+
+            // Redirection selon les rôles
+            if (in_array('ROLE_USER', $roles)) { // Admin
                 return new RedirectResponse($this->urlGenerator->generate('app_home'));
             }
 
-            if (in_array('Enseignant', $roles)) {
-                // Redirect to 'app_enseignant_index' if the user has ROLE_ENSEIGNANT
+            if (in_array('ROLE_ENSEIGNANT', $roles)) { // Enseignant
                 return new RedirectResponse($this->urlGenerator->generate('app_reserve_index'));
+            }
+
+            if (in_array('ROLE_ETUDIANT', $roles)) { // Étudiant
+                return new RedirectResponse($this->urlGenerator->generate('app_etudiant_dashboard'));
+            }
+
+            if (in_array('ROLE_AGENT', $roles)) { // Agent universitaire
+                return new RedirectResponse($this->urlGenerator->generate('app_agent_dashboard'));
             }
         }
 
-        // Default redirection if no roles match
+        // Redirection par défaut si aucun rôle ne correspond
         return new RedirectResponse($this->urlGenerator->generate('app_default_dashboard'));
     }
 
