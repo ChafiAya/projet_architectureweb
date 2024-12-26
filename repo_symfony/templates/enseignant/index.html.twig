@@ -15,7 +15,7 @@
                     <th>Nom</th>
                     <th>Prénom</th>
                     <th>Email</th>
-                    <th>Département</th>
+                    {# <th>Département</th> #}
                     <th>Actions</th>
                 </tr>
             </thead>
@@ -26,7 +26,7 @@
                     <td>{{ enseignant.nom}}</td>
                     <td>{{ enseignant.prenom }}</td>
                     <td>{{ enseignant.email }}</td>
-                    <td>{{ enseignant.departement }}</td>
+                    {# <td>{{ enseignant.departement }}</td> #}
                     <td>
                         
                         <a href="{{ path('app_enseignant_show', {'id': enseignant.id}) }}" class="btn btn-info btn-sm">Afficher</a>

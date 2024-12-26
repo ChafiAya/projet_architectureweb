@@ -21,8 +21,8 @@
             {% for matiere in matieres %}
                 <tr>
                     <td>{{ matiere.id }}</td>
-                    <td>{{ matiere.codeMat }}</td>
-                    <td>{{ matiere.nomMatiere }}</td>
+                    <td>{{ matiere.codeMatiere }}</td>
+                    <td>{{ matiere.nom }}</td>
                     <td>
                         
                         <a href="{{ path('app_matiere_show', {'id': matiere.id}) }}" class="btn btn-info btn-sm">Afficher</a>

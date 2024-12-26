@@ -38,7 +38,7 @@ class RegistrationFormType extends AbstractType
                 'mapped' => false,
                 'constraints' => [
                     new IsTrue([
-                        'message' => 'You should agree to our terms.',
+                        'message' => 'Vous devez accepter nos conditions.',
                     ]),
                 ],
             ])
@@ -48,21 +48,21 @@ class RegistrationFormType extends AbstractType
                 'attr' => [
                     'autocomplete' => 'new-password',
                     'class' => 'bg-transparent block mt-10 mx-auto border-b-2 w-1/5 h-20 text-2xl outline-none',
-                    'placeholder' => 'Password'
+                    'placeholder' => 'Mot de passe'
                 ],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Veuillez entrer un mot de passe',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'Votre mot de passe doit comporter au moins {{ limit }} caractères',
                         'max' => 4096,
                     ]),
                 ],
             ])
             ->add('roles', ChoiceType::class, [
-                'label' => 'Select your role',
+                'label' => 'Sélectionnez votre rôle',
                 'choices' => [
                     'Enseignant' => 'ROLE_ENSEIGNANT',
                     'Etudiant' => 'ROLE_ETUDIANT',
@@ -72,12 +72,12 @@ class RegistrationFormType extends AbstractType
                 'data' => 'ROLE_USER',
             ])
             ->add('promotion', ChoiceType::class, [
-                'label' => 'Choose your Promotion',
+                'label' => 'Sélectionnez votre promotion',
                 'mapped' => false,
                 'choices' => $this->getPromotionChoices(),
                 'expanded' => false,
                 'multiple' => false,
-                'placeholder' => 'Select your Promotion',
+                // 'placeholder' => 'Sélectionnez votre promotion',
                 'required' => false,
             ]);
     }

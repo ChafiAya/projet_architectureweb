@@ -28,7 +28,9 @@ class LoginController extends AbstractController
     #[Route('/logout', name: 'app_logout')]
     public function logout(): void
     {
+        
         throw new \LogicException('Cette méthode peut rester vide.');
+        
     }
 }
 
