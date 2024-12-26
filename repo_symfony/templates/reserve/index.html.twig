@@ -69,7 +69,7 @@
                 <td>{{ reserve.dateReservation|date('Y-m-d') }}</td>
                 <td>{{ reserve.heureDepart|date('H:i:s') }}</td>
                 <td>{{ reserve.heureFin|date('H:i:s') }}</td>
-                <td>{{ reserve.enseignants|first.getNomEnseignant() }}</td>
+                <td>{{ reserve.enseignants|first.getNom() }}</td>
                 <td>{{ reserve.promotion|first.getEnseignement() }}</td>
                 <td>{{ reserve.salles|first.getNomDeSalle() }}</td>
                 <td>

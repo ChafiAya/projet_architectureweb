@@ -57,7 +57,7 @@
                         title: '{{ reservation.salles|first.nomDeSalle }} - {{ reservation.promotion|first.niveauPromotion }}',
                         start: '{{ reservation.dateReservation|date("Y-m-d") }}T{{ reservation.heureDepart|date("H:i:s") }}',
                         end: '{{ reservation.dateReservation|date("Y-m-d") }}T{{ reservation.heureFin|date("H:i:s") }}',
-                        description: 'Enseignant : {{ reservation.enseignants|first.nomEnseignant }}'
+                        description: 'Enseignant : {{ reservation.enseignants|first.nom }}'
                     },
                     {% endfor %}
                 ]

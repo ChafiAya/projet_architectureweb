@@ -32,7 +32,7 @@ class ReserveType extends AbstractType
             ])
             ->add('enseignants', EntityType::class, [
                 'class' => Enseignant::class,
-                'choice_label' => 'nom_enseignant',
+                'choice_label' => 'nom',
                 'multiple' => true,
             ])
             ->add('promotion', EntityType::class, [
