@@ -6,7 +6,7 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Liste des Enseignants</h1>
 
-    <!-- Tableau des enseignants -->
+
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead class="thead-light">
@@ -28,7 +28,7 @@
                     <td>{{ enseignant.emailEnseignant }}</td>
                     <td>{{ enseignant.departement }}</td>
                     <td>
-                        <!-- Liens stylisés en boutons -->
+                        
                         <a href="{{ path('app_enseignant_show', {'id': enseignant.id}) }}" class="btn btn-info btn-sm">Afficher</a>
                         <a href="{{ path('app_enseignant_edit', {'id': enseignant.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
                     </td>
@@ -42,7 +42,6 @@
         </table>
     </div>
 
-    <!-- Lien pour ajouter un nouvel enseignant -->
     <div class="text-center mt-4">
         <a href="{{ path('app_enseignant_new') }}" class="btn btn-success">Ajouter un Enseignant</a>
     </div>

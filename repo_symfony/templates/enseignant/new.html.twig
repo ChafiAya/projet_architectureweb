@@ -6,12 +6,11 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Créer un Nouvel Enseignant</h1>
 
-    <!-- Formulaire de création dans une carte -->
     <div class="card p-4 shadow-sm">
         {{ include('enseignant/_form.html.twig') }}
     </div>
 
-    <!-- Lien pour revenir à la liste -->
+    
     <div class="text-center mt-4">
         <a href="{{ path('app_enseignant_index') }}" class="btn btn-secondary">Retour à la liste</a>
     </div>

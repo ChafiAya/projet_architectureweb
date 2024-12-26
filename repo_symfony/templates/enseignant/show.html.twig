@@ -6,7 +6,6 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Détails de l'Enseignant</h1>
 
-    <!-- Table des détails de l'enseignant dans une carte -->
     <div class="card p-4 shadow-sm">
         <table class="table table-bordered">
             <tbody>
@@ -34,7 +33,7 @@
         </table>
     </div>
 
-    <!-- Liens pour revenir à la liste, modifier et supprimer -->
+    <!-- LBoutons pour revenir à la liste, modifier et supprimer -->
     <div class="text-center mt-4">
         <a href="{{ path('app_enseignant_index') }}" class="btn btn-secondary">Retour à la liste</a>
         <a href="{{ path('app_enseignant_edit', {'id': enseignant.id}) }}" class="btn btn-warning ml-2">Modifier</a>

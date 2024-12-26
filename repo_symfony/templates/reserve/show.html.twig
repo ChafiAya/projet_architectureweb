@@ -6,7 +6,6 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Détails de la Réservation</h1>
 
-    <!-- Table des détails de la réservation dans une carte -->
     <div class="card shadow-sm p-4">
         <table class="table table-bordered">
             <tbody>
@@ -30,13 +29,11 @@
         </table>
     </div>
 
-    <!-- Liens pour revenir à la liste et modifier -->
     <div class="text-center mt-4">
         <a href="{{ path('app_reserve_index') }}" class="btn btn-secondary">Retour à la liste</a>
         <a href="{{ path('app_reserve_edit', {'id': reserve.id}) }}" class="btn btn-warning ml-2">Modifier</a>
     </div>
 
-    <!-- Formulaire de suppression -->
     <div class="mt-4 text-center">
         {{ include('reserve/_delete_form.html.twig') }}
     </div>

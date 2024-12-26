@@ -1,7 +1,6 @@
 <form method="post" action="{{ path('app_reserve_delete', {'id': reserve.id}) }}" onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet élément ?');">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reserve.id) }}">
     
-    <!-- Bouton de suppression stylisé avec icône -->
     <button type="submit" class="btn btn-danger btn-sm">
         <i class="bi bi-trash"></i> Supprimer
     </button>

@@ -4,24 +4,21 @@
 
 {% block body %}
 <div class="container mt-5">
-    <!-- Affichage des erreurs -->
     {% if error %}
         <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
 
-    <!-- Vérification si l'utilisateur est déjà connecté -->
     {% if app.user %}
         <div class="mb-3 text-center">
             Vous êtes connecté en tant que {{ app.user.email }}. <a href="{{ path('app_logout') }}">Déconnexion</a>
         </div>
     {% endif %}
 
-    <!-- Formulaire de connexion -->
+
     <div class="card shadow-sm p-4">
         <h1 class="text-center mb-4">Connexion</h1>
 
         <form method="post">
-            <!-- Champ email -->
             <div class="mb-3">
                 <label for="inputEmail" class="form-label">Email</label>
                 <input 
@@ -37,7 +34,6 @@
                 >
             </div>
 
-            <!-- Champ mot de passe -->
             <div class="mb-3">
                 <label for="inputPassword" class="form-label">Mot de passe</label>
                 <input 
@@ -51,14 +47,12 @@
                 >
             </div>
 
-            <!-- Token CSRF pour la sécurité -->
             <input 
                 type="hidden" 
                 name="_csrf_token"
                 value="{{ csrf_token('authenticate') }}"
             >
 
-            <!-- Bouton de soumission -->
             <div class="text-center">
                 <button 
                     class="btn btn-primary w-50 mt-4" 

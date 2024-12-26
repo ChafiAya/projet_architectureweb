@@ -6,12 +6,10 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Créer une Nouvelle Salle</h1>
 
-    <!-- Formulaire de création dans une carte -->
     <div class="card shadow-sm p-4">
         {{ include('sale/_form.html.twig') }}
     </div>
 
-    <!-- Bouton pour revenir à la liste des ventes -->
     <div class="mt-4 text-center">
         <a href="{{ path('app_sale_index') }}" class="btn btn-secondary">Retour à la liste</a>
     </div>

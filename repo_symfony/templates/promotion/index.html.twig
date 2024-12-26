@@ -6,7 +6,6 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Liste des Promotions</h1>
 
-    <!-- Table des promotions -->
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead class="thead-light">
@@ -28,7 +27,6 @@
                     <td>{{ promotion.choix }}</td>
                     <td>{{ promotion.nbrEtudiant }}</td>
                     <td>
-                        <!-- Liens stylisés en boutons -->
                         <a href="{{ path('app_promotion_show', {'id': promotion.id}) }}" class="btn btn-info btn-sm">Afficher</a>
                         <a href="{{ path('app_promotion_edit', {'id': promotion.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
                     </td>
@@ -42,7 +40,6 @@
         </table>
     </div>
 
-    <!-- Lien pour créer une nouvelle promotion -->
     <div class="text-center mt-4">
         <a href="{{ path('app_promotion_new') }}" class="btn btn-success">Ajouter une Promotion</a>
     </div>

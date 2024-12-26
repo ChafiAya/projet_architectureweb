@@ -6,17 +6,15 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Rechercher des Réservations par Salle</h1>
 
-    <!-- Formulaire de recherche dans une carte -->
+
     <div class="card shadow-sm p-4">
         {{ form_start(form) }}
 
-            <!-- Sélection de la salle -->
             <div class="mb-3">
                 {{ form_label(form.salle, 'Sélectionner une Salle', {'class': 'form-label'}) }}
                 {{ form_widget(form.salle, {'attr': {'class': 'form-select'}}) }}
             </div>
 
-            <!-- Bouton de recherche -->
             <div class="mt-4 text-center">
                 <button type="submit" class="btn btn-primary">Rechercher</button>
             </div>

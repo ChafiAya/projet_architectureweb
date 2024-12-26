@@ -6,7 +6,6 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Liste des Matières</h1>
 
-    <!-- Table des matières avec une présentation améliorée -->
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead class="thead-light">
@@ -24,7 +23,6 @@
                     <td>{{ matiere.codeMat }}</td>
                     <td>{{ matiere.nomMatiere }}</td>
                     <td>
-                        <!-- Liens stylisés en boutons -->
                         <a href="{{ path('app_matiere_show', {'id': matiere.id}) }}" class="btn btn-info btn-sm">Afficher</a>
                         <a href="{{ path('app_matiere_edit', {'id': matiere.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
                     </td>
@@ -38,7 +36,6 @@
         </table>
     </div>
 
-    <!-- Lien pour ajouter une nouvelle matière -->
     <div class="text-center mt-4">
         <a href="{{ path('app_matiere_new') }}" class="btn btn-success">Ajouter une Matière</a>
     </div>

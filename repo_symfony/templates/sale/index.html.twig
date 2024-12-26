@@ -6,7 +6,6 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Liste des Salles</h1>
 
-    <!-- Table des salles -->
     <div class="table-responsive">
         <table class="table table-striped table-bordered">
             <thead class="thead-dark">
@@ -26,7 +25,6 @@
                     <td>{{ sale.nomDeSalle }}</td>
                     <td>{{ sale.capacite }}</td>
                     <td>
-                        <!-- Liens stylisés en boutons -->
                         <a href="{{ path('app_sale_show', {'id': sale.id}) }}" class="btn btn-info btn-sm">Afficher</a>
                         <a href="{{ path('app_sale_edit', {'id': sale.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
                     </td>
@@ -40,7 +38,7 @@
         </table>
     </div>
 
-    <!-- Lien pour ajouter une nouvelle salle -->
+
     <div class="text-center mt-4">
         <a href="{{ path('app_sale_new') }}" class="btn btn-success">Ajouter une nouvelle salle</a>
     </div>
