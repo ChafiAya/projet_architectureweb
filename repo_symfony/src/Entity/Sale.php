@@ -6,8 +6,10 @@ use App\Repository\SaleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Metadata\ApiResource;
 
 #[ORM\Entity(repositoryClass: SaleRepository::class)]
+#[ApiResource]
 class Sale
 {
     #[ORM\Id]
