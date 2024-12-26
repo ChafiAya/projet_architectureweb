@@ -1,19 +1,22 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier l'Enseignant{% endblock %}
+{% block title %}Modifier Enseignant{% endblock %}
 
 {% block body %}
 <div class="container mt-5">
     <h1 class="text-center mb-4">Modifier l'Enseignant</h1>
 
+    
     <div class="card p-4 shadow-sm">
         {{ include('enseignant/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
     </div>
 
+    
     <div class="text-center mt-4">
         <a href="{{ path('app_enseignant_index') }}" class="btn btn-secondary">Retour à la liste</a>
     </div>
 
+    
     <div class="mt-4 text-center">
         {{ include('enseignant/_delete_form.html.twig') }}
     </div>

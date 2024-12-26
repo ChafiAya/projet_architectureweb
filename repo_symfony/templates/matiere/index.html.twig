@@ -6,6 +6,7 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Liste des Matières</h1>
 
+
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead class="thead-light">
@@ -23,6 +24,7 @@
                     <td>{{ matiere.codeMat }}</td>
                     <td>{{ matiere.nomMatiere }}</td>
                     <td>
+                        
                         <a href="{{ path('app_matiere_show', {'id': matiere.id}) }}" class="btn btn-info btn-sm">Afficher</a>
                         <a href="{{ path('app_matiere_edit', {'id': matiere.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
                     </td>

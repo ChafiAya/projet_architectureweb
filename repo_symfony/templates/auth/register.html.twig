@@ -11,6 +11,7 @@
 
         {{ form_start(registrationForm) }}
 
+
             <div class="mb-4">
                 {{ form_row(registrationForm.email, {'attr': {'class': 'form-input w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'}}) }}
             </div>
@@ -19,7 +20,6 @@
                 {{ form_row(registrationForm.plainPassword, {'attr': {'class': 'form-input w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'}}) }}
             </div>
 
-
             <div class="mb-4">
                 {{ form_row(registrationForm.roles, {'attr': {'class': 'form-input w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'}}) }}
             </div>
@@ -27,11 +27,10 @@
             <div class="mb-4">
                 {{ form_row(registrationForm.promotion, {'attr': {'class': 'form-input w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'}}) }}
             </div>
-  
+
             <div class="mb-4">
                 {{ form_row(registrationForm.agreeTerms, {'attr': {'class': 'form-checkbox text-blue-500'}}) }}
             </div>
-
 
             <button 
                 type="submit" 

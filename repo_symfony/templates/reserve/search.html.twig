@@ -10,10 +10,12 @@
     <div class="card shadow-sm p-4">
         {{ form_start(form) }}
 
+
             <div class="mb-3">
                 {{ form_label(form.salle, 'Sélectionner une Salle', {'class': 'form-label'}) }}
                 {{ form_widget(form.salle, {'attr': {'class': 'form-select'}}) }}
             </div>
+
 
             <div class="mt-4 text-center">
                 <button type="submit" class="btn btn-primary">Rechercher</button>

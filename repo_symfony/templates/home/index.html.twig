@@ -4,11 +4,11 @@
 
 {% block body %}
 <div class="container text-center mt-5">
-    <h1 class="mb-4">Bienvenue sur le Système de Réservation Universitaire</h1>
+    <h1 class="mb-4">Bienvenue sur le système de réservation universitaire</h1>
     <p class="lead mb-5">Une interface simple et intuitive pour gérer les réservations de salles, matières, et plus encore.</p>
 
     <div class="row justify-content-center">
-        <div class="col-md-5 mb-4">
+        <div class="col-md-4 mb-3">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Connexion</h5>
@@ -17,24 +17,12 @@
                 </div>
             </div>
         </div>
-        <div class="col-md-5 mb-4">
+        <div class="col-md-4 mb-3">
             <div class="card shadow-sm">
                 <div class="card-body">
                     <h5 class="card-title">Inscription</h5>
                     <p class="card-text">Si vous n'avez pas encore de compte, inscrivez-vous dès maintenant.</p>
                     <a href="{{ path('register') }}" class="btn btn-secondary w-100">S'inscrire</a>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row justify-content-center mt-4">
-        <div class="col-md-8">
-            <div class="card shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">En savoir plus</h5>
-                    <p class="card-text">Découvrez comment le système de réservation peut vous aider à gérer vos horaires, ressources, et plus encore. Ce système est conçu pour simplifier la gestion des réservations universitaires et vous offrir une expérience utilisateur optimale.</p>
-                    <a href="{{ path('about') }}" class="btn btn-info w-100">En savoir plus</a>
                 </div>
             </div>
         </div>
