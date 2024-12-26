@@ -6,7 +6,7 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Calendrier des Réservations</h1>
 
-    
+    <!-- Formulaire pour filtrer les réservations -->
     <form method="get" action="{{ path('app_calendrier') }}" class="mb-4">
         <div class="row">
             <div class="col-md-6">
@@ -44,7 +44,6 @@
     <!-- Affichage du calendrier -->
     <div id="calendar" style="width: 100%; margin: auto;"></div>
     
-
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -66,5 +65,9 @@
         });
     </script>
 
+    <!-- Boutons pour naviguer -->
+    <div class="mt-4 text-center">
+        <a href="{{ path('app_reserve_index') }}" class="btn btn-info mx-2">Voir la liste des Réservations</a>
+    </div>
 </div>
 {% endblock %}
