@@ -1,39 +1,48 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Sale{% endblock %}
+{% block title %}Détails de la Salle{% endblock %}
 
 {% block body %}
-    <h1>Sale</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Détails de la Salle</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ sale.id }}</td>
-            </tr>
-            <tr>
-                <th>Batiment</th>
-                <td>{{ sale.batiment }}</td>
-            </tr>
-            <tr>
-                <th>Etage</th>
-                <td>{{ sale.etage }}</td>
-            </tr>
-            <tr>
-                <th>Nom_de_salle</th>
-                <td>{{ sale.nomDeSalle }}</td>
-            </tr>
-          
-            <tr>
-                <th>Capacite</th>
-                <td>{{ sale.capacite }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- Table des détails de la salle dans une carte -->
+    <div class="card shadow-sm p-4">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ sale.id }}</td>
+                </tr>
+                <tr>
+                    <th>Bâtiment</th>
+                    <td>{{ sale.batiment }}</td>
+                </tr>
+                <tr>
+                    <th>Étage</th>
+                    <td>{{ sale.etage }}</td>
+                </tr>
+                <tr>
+                    <th>Nom de la Salle</th>
+                    <td>{{ sale.nomDeSalle }}</td>
+                </tr>
+                <tr>
+                    <th>Capacité</th>
+                    <td>{{ sale.capacite }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <a href="{{ path('app_sale_index') }}">back to list</a>
+    <!-- Liens pour revenir à la liste et modifier -->
+    <div class="text-center mt-4">
+        <a href="{{ path('app_sale_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        <a href="{{ path('app_sale_edit', {'id': sale.id}) }}" class="btn btn-warning ml-2">Modifier</a>
+    </div>
 
-    <a href="{{ path('app_sale_edit', {'id': sale.id}) }}">edit</a>
-
-    {{ include('sale/_delete_form.html.twig') }}
+    <!-- Formulaire de suppression -->
+    <div class="mt-4 text-center">
+        {{ include('sale/_delete_form.html.twig') }}
+    </div>
+</div>
 {% endblock %}

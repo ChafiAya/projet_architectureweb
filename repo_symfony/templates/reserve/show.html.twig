@@ -1,35 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Reserve{% endblock %}
+{% block title %}Détails de la Réservation{% endblock %}
 
 {% block body %}
-    <h1>Reserve</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Détails de la Réservation</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ reserve.id }}</td>
-            </tr>
-            <tr>
-                <th>Date_reservation</th>
-                <td>{{ reserve.dateReservation ? reserve.dateReservation|date('Y-m-d') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Heure_depart</th>
-                <td>{{ reserve.heureDepart ? reserve.heureDepart|date('H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Heure_fin</th>
-                <td>{{ reserve.heureFin ? reserve.heureFin|date('H:i:s') : '' }}</td>
-            </tr>
-           
-        </tbody>
-    </table>
+    <!-- Table des détails de la réservation dans une carte -->
+    <div class="card shadow-sm p-4">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ reserve.id }}</td>
+                </tr>
+                <tr>
+                    <th>Date de la Réservation</th>
+                    <td>{{ reserve.dateReservation ? reserve.dateReservation|date('Y-m-d') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Heure de Départ</th>
+                    <td>{{ reserve.heureDepart ? reserve.heureDepart|date('H:i:s') : '' }}</td>
+                </tr>
+                <tr>
+                    <th>Heure de Fin</th>
+                    <td>{{ reserve.heureFin ? reserve.heureFin|date('H:i:s') : '' }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <a href="{{ path('app_reserve_index') }}">back to list</a>
+    <!-- Liens pour revenir à la liste et modifier -->
+    <div class="text-center mt-4">
+        <a href="{{ path('app_reserve_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        <a href="{{ path('app_reserve_edit', {'id': reserve.id}) }}" class="btn btn-warning ml-2">Modifier</a>
+    </div>
 
-    <a href="{{ path('app_reserve_edit', {'id': reserve.id}) }}">edit</a>
-
-    {{ include('reserve/_delete_form.html.twig') }}
+    <!-- Formulaire de suppression -->
+    <div class="mt-4 text-center">
+        {{ include('reserve/_delete_form.html.twig') }}
+    </div>
+</div>
 {% endblock %}

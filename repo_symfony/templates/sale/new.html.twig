@@ -1,11 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Sale{% endblock %}
+{% block title %}Créer une Nouvelle Salle{% endblock %}
 
 {% block body %}
-    <h1>Create new Sale</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Créer une Nouvelle Salle</h1>
 
-    {{ include('sale/_form.html.twig') }}
+    <!-- Formulaire de création dans une carte -->
+    <div class="card shadow-sm p-4">
+        {{ include('sale/_form.html.twig') }}
+    </div>
 
-    <a href="{{ path('app_sale_index') }}">back to list</a>
+    <!-- Bouton pour revenir à la liste des ventes -->
+    <div class="mt-4 text-center">
+        <a href="{{ path('app_sale_index') }}" class="btn btn-secondary">Retour à la liste</a>
+    </div>
+</div>
 {% endblock %}

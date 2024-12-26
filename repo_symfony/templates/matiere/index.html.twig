@@ -1,37 +1,46 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Matiere index{% endblock %}
+{% block title %}Liste des Matières{% endblock %}
 
 {% block body %}
-    <h1>Matiere index</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Liste des Matières</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Code_mat</th>
-                <th>Nom_matiere</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for matiere in matieres %}
-            <tr>
-                <td>{{ matiere.id }}</td>
-                <td>{{ matiere.codeMat }}</td>
-                <td>{{ matiere.nomMatiere }}</td>
-                <td>
-                    <a href="{{ path('app_matiere_show', {'id': matiere.id}) }}">show</a>
-                    <a href="{{ path('app_matiere_edit', {'id': matiere.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="4">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <!-- Table des matières avec une présentation améliorée -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-light">
+                <tr>
+                    <th>Id</th>
+                    <th>Code Matière</th>
+                    <th>Nom de la Matière</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for matiere in matieres %}
+                <tr>
+                    <td>{{ matiere.id }}</td>
+                    <td>{{ matiere.codeMat }}</td>
+                    <td>{{ matiere.nomMatiere }}</td>
+                    <td>
+                        <!-- Liens stylisés en boutons -->
+                        <a href="{{ path('app_matiere_show', {'id': matiere.id}) }}" class="btn btn-info btn-sm">Afficher</a>
+                        <a href="{{ path('app_matiere_edit', {'id': matiere.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="4" class="text-center">Aucun enregistrement trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-    <a href="{{ path('app_matiere_new') }}">Create new</a>
+    <!-- Lien pour ajouter une nouvelle matière -->
+    <div class="text-center mt-4">
+        <a href="{{ path('app_matiere_new') }}" class="btn btn-success">Ajouter une Matière</a>
+    </div>
+</div>
 {% endblock %}

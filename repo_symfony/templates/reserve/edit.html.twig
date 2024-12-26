@@ -1,13 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Reserve{% endblock %}
+{% block title %}Modifier la Réservation{% endblock %}
 
 {% block body %}
-    <h1>Edit Reserve</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Modifier la Réservation</h1>
 
-    {{ include('reserve/_form.html.twig', {'button_label': 'Update'}) }}
+    <!-- Formulaire de modification dans une carte -->
+    <div class="card p-4 shadow-sm">
+        {{ include('reserve/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+    </div>
 
-    <a href="{{ path('app_reserve_index') }}">back to list</a>
+    <!-- Lien pour revenir à la liste -->
+    <div class="text-center mt-4">
+        <a href="{{ path('app_reserve_index') }}" class="btn btn-secondary">Retour à la liste</a>
+    </div>
 
-    {{ include('reserve/_delete_form.html.twig') }}
+    <!-- Formulaire de suppression -->
+    <div class="mt-4 text-center">
+        {{ include('reserve/_delete_form.html.twig') }}
+    </div>
+</div>
 {% endblock %}

@@ -1,32 +1,48 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Inscription{% endblock %}
 
 {% block body %}
-    <div class="w-4/5 m-auto text-center">
-        <div class="py-12 border-b border-gray-200">
-            <h1 class="text-6xl pt-12 pb-8">
-                Register
-            </h1>
+    <div class="w-full max-w-md m-auto p-6 bg-white rounded-lg shadow-md">
+        <div class="text-center mb-6">
+            <h1 class="text-3xl font-bold text-gray-800">Inscription</h1>
+            <p class="text-gray-500 mt-2">Créez votre compte pour accéder au système de réservation.</p>
+        </div>
 
-            {{ form_start(registrationForm) }}
-                {{ form_row(registrationForm.email) }}
-                {{ form_row(registrationForm.plainPassword) }}
-                {{ form_row(registrationForm.roles) }}
-                
-                {# Add the promotion field here #}
-                {{ form_row(registrationForm.promotion) }}
-                
-                {{ form_row(registrationForm.agreeTerms) }}
-            
+        {{ form_start(registrationForm) }}
+
+            <!-- Champ Email -->
+            <div class="mb-4">
+                {{ form_row(registrationForm.email, {'attr': {'class': 'form-input w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'}}) }}
+            </div>
+
+            <!-- Champ Mot de Passe -->
+            <div class="mb-4">
+                {{ form_row(registrationForm.plainPassword, {'attr': {'class': 'form-input w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'}}) }}
+            </div>
+
+            <!-- Champ Rôles -->
+            <div class="mb-4">
+                {{ form_row(registrationForm.roles, {'attr': {'class': 'form-input w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'}}) }}
+            </div>
+
+            <!-- Champ Promotion -->
+            <div class="mb-4">
+                {{ form_row(registrationForm.promotion, {'attr': {'class': 'form-input w-full py-3 px-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500'}}) }}
+            </div>
+
+            <!-- Champ Agree Terms -->
+            <div class="mb-4">
+                {{ form_row(registrationForm.agreeTerms, {'attr': {'class': 'form-checkbox text-blue-500'}}) }}
+            </div>
+
+            <!-- Bouton de Soumission -->
             <button 
                 type="submit" 
-                class="uppercase bg-blue-500 text-gray-100 text-lg w-1/5 mt-10 font-extrabold py-4 px-8 rounded-3xl">
-                Register
+                class="btn btn-lg btn-primary w-full mt-4 font-extrabold py-4 px-8 rounded-lg shadow-lg hover:bg-blue-600 transition duration-300 ease-in-out">
+                S'inscrire
             </button>
-            
-            {{ form_end(registrationForm) }}
-        </div>
+
+        {{ form_end(registrationForm) }}
     </div>
 {% endblock %}
-

@@ -1,30 +1,40 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Matiere{% endblock %}
+{% block title %}Détails de la Matière{% endblock %}
 
 {% block body %}
-    <h1>Matiere</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Détails de la Matière</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ matiere.id }}</td>
-            </tr>
-            <tr>
-                <th>Code_mat</th>
-                <td>{{ matiere.codeMat }}</td>
-            </tr>
-            <tr>
-                <th>Nom_matiere</th>
-                <td>{{ matiere.nomMatiere }}</td>
-            </tr>
-        </tbody>
-    </table>
+    <!-- Table des détails de la matière dans une carte -->
+    <div class="card p-4 shadow-sm">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ matiere.id }}</td>
+                </tr>
+                <tr>
+                    <th>Code de la Matière</th>
+                    <td>{{ matiere.codeMat }}</td>
+                </tr>
+                <tr>
+                    <th>Nom de la Matière</th>
+                    <td>{{ matiere.nomMatiere }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <a href="{{ path('app_matiere_index') }}">back to list</a>
+    <!-- Liens pour revenir à la liste et modifier -->
+    <div class="text-center mt-4">
+        <a href="{{ path('app_matiere_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        <a href="{{ path('app_matiere_edit', {'id': matiere.id}) }}" class="btn btn-warning ml-2">Modifier</a>
+    </div>
 
-    <a href="{{ path('app_matiere_edit', {'id': matiere.id}) }}">edit</a>
-
-    {{ include('matiere/_delete_form.html.twig') }}
+    <!-- Formulaire de suppression -->
+    <div class="mt-4 text-center">
+        {{ include('matiere/_delete_form.html.twig') }}
+    </div>
+</div>
 {% endblock %}

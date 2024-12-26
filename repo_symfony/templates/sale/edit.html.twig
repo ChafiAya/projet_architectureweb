@@ -1,13 +1,24 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit Sale{% endblock %}
+{% block title %}Modifier la Vente{% endblock %}
 
 {% block body %}
-    <h1>Edit Sale</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Modifier la Vente</h1>
 
-    {{ include('sale/_form.html.twig', {'button_label': 'Update'}) }}
+    <!-- Formulaire de modification dans une carte -->
+    <div class="card shadow-sm p-4">
+        {{ include('sale/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
+    </div>
 
-    <a href="{{ path('app_sale_index') }}">back to list</a>
+    <!-- Lien pour revenir à la liste -->
+    <div class="text-center mt-4">
+        <a href="{{ path('app_sale_index') }}" class="btn btn-secondary">Retour à la liste</a>
+    </div>
 
-    {{ include('sale/_delete_form.html.twig') }}
+    <!-- Formulaire de suppression -->
+    <div class="mt-4 text-center">
+        {{ include('sale/_delete_form.html.twig') }}
+    </div>
+</div>
 {% endblock %}

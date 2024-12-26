@@ -1,11 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Promotion{% endblock %}
+{% block title %}Créer une Nouvelle Promotion{% endblock %}
 
 {% block body %}
-    <h1>Create new Promotion</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Créer une Nouvelle Promotion</h1>
 
-    {{ include('promotion/_form.html.twig') }}
+    <!-- Formulaire de création dans une carte -->
+    <div class="card p-4 shadow-sm">
+        {{ include('promotion/_form.html.twig') }}
+    </div>
 
-    <a href="{{ path('app_promotion_index') }}">back to list</a>
+    <!-- Lien pour revenir à la liste -->
+    <div class="text-center mt-4">
+        <a href="{{ path('app_promotion_index') }}" class="btn btn-secondary">Retour à la liste</a>
+    </div>
+</div>
 {% endblock %}

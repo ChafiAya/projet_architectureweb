@@ -3,39 +3,48 @@
 {% block title %}Calendrier des Réservations{% endblock %}
 
 {% block body %}
-<div class="container">
-    <h1>Calendrier des Réservations</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Calendrier des Réservations</h1>
 
-    <form method="get" action="{{ path('app_calendrier') }}">
-        <div class="mb-3">
-            <label for="salle" class="form-label">Salle :</label>
-            <select id="salle" name="salle_id" class="form-select">
-                <option value="">-- Sélectionner une Salle --</option>
-                {% for salle in salles %}
-                    <option value="{{ salle.id }}" {% if salleId == salle.id %}selected{% endif %}>
-                        {{ salle.nomDeSalle }}
-                    </option>
-                {% endfor %}
-            </select>
+    <!-- Formulaire de filtrage -->
+    <form method="get" action="{{ path('app_calendrier') }}" class="mb-4">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="salle" class="form-label">Salle :</label>
+                    <select id="salle" name="salle_id" class="form-select">
+                        <option value="">-- Sélectionner une Salle --</option>
+                        {% for salle in salles %}
+                            <option value="{{ salle.id }}" {% if salleId == salle.id %}selected{% endif %}>
+                                {{ salle.nomDeSalle }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <div class="mb-3">
+                    <label for="promotion" class="form-label">Promotion :</label>
+                    <select id="promotion" name="promotion_id" class="form-select">
+                        <option value="">-- Sélectionner une Promotion --</option>
+                        {% for promotion in promotions %}
+                            <option value="{{ promotion.id }}" {% if promotionId == promotion.id %}selected{% endif %}>
+                                {{ promotion.niveauPromotion }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
         </div>
 
-        <div class="mb-3">
-            <label for="promotion" class="form-label">Promotion :</label>
-            <select id="promotion" name="promotion_id" class="form-select">
-                <option value="">-- Sélectionner une Promotion --</option>
-                {% for promotion in promotions %}
-                    <option value="{{ promotion.id }}" {% if promotionId == promotion.id %}selected{% endif %}>
-                        {{ promotion.niveauPromotion }}
-                    </option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <button type="submit" class="btn btn-primary">Filtrer</button>
+        <button type="submit" class="btn btn-primary w-100">Filtrer</button>
     </form>
 
-    <div id="calendar" style="width: 80%; margin: auto;"></div>
+    <!-- Affichage du calendrier -->
+    <div id="calendar" style="width: 100%; margin: auto;"></div>
     
+    <!-- Inclusion de FullCalendar JS -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
