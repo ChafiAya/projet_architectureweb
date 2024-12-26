@@ -1,0 +1,61 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Calendrier des Réservations{% endblock %}
+
+{% block body %}
+<div class="container">
+    <h1>Calendrier des Réservations</h1>
+
+    <form method="get" action="{{ path('app_calendrier') }}">
+        <div class="mb-3">
+            <label for="salle" class="form-label">Salle :</label>
+            <select id="salle" name="salle_id" class="form-select">
+                <option value="">-- Sélectionner une Salle --</option>
+                {% for salle in salles %}
+                    <option value="{{ salle.id }}" {% if salleId == salle.id %}selected{% endif %}>
+                        {{ salle.nomDeSalle }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="promotion" class="form-label">Promotion :</label>
+            <select id="promotion" name="promotion_id" class="form-select">
+                <option value="">-- Sélectionner une Promotion --</option>
+                {% for promotion in promotions %}
+                    <option value="{{ promotion.id }}" {% if promotionId == promotion.id %}selected{% endif %}>
+                        {{ promotion.niveauPromotion }}
+                    </option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Filtrer</button>
+    </form>
+
+    <div id="calendar" style="width: 80%; margin: auto;"></div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const calendarEl = document.getElementById('calendar');
+            const calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: [
+                    {% for reservation in reservations %}
+                    {
+                        title: '{{ reservation.salles|first.nomDeSalle }} - {{ reservation.promotion|first.niveauPromotion }}',
+                        start: '{{ reservation.dateReservation|date("Y-m-d") }}T{{ reservation.heureDepart|date("H:i:s") }}',
+                        end: '{{ reservation.dateReservation|date("Y-m-d") }}T{{ reservation.heureFin|date("H:i:s") }}',
+                        description: 'Enseignant : {{ reservation.enseignants|first.nomEnseignant }}'
+                    },
+                    {% endfor %}
+                ]
+            });
+            calendar.render();
+        });
+    </script>
+
+</div>
+{% endblock %}
