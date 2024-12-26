@@ -60,7 +60,7 @@ class HomeController extends AbstractController
                             <li><a href="/enseignant">enseignant</a></li>
                             <li><a href="/matiere">matiere</a></li>
                             <li><a href="/promotion">promotion</a></li>
-                            <li><a href="/sale">salle</li>
+                            <li><a href="/salle">salle</li>
                             <li><a href="/reserve">reservation</a></li>
                             <li><a href="/register">registration of student or teacher</a></li>
                            

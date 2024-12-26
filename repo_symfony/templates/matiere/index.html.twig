@@ -9,8 +9,9 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Code_mat</th>
-                <th>Nom_matiere</th>
+                <th>Nom</th>
+                <th>CodeMatiere</th>
+                <th>Description</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -18,8 +19,9 @@
         {% for matiere in matieres %}
             <tr>
                 <td>{{ matiere.id }}</td>
-                <td>{{ matiere.codeMat }}</td>
-                <td>{{ matiere.nomMatiere }}</td>
+                <td>{{ matiere.nom }}</td>
+                <td>{{ matiere.codeMatiere }}</td>
+                <td>{{ matiere.description }}</td>
                 <td>
                     <a href="{{ path('app_matiere_show', {'id': matiere.id}) }}">show</a>
                     <a href="{{ path('app_matiere_edit', {'id': matiere.id}) }}">edit</a>
@@ -27,7 +29,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="4">no records found</td>
+                <td colspan="5">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

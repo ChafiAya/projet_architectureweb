@@ -9,10 +9,9 @@
         <thead>
             <tr>
                 <th>Id</th>
-                <th>Nom_enseignant</th>
+                <th>Nom</th>
                 <th>Prenom</th>
-                <th>Email_enseignant</th>
-                <th>Departement</th>
+                <th>Email</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -20,10 +19,9 @@
         {% for enseignant in enseignants %}
             <tr>
                 <td>{{ enseignant.id }}</td>
-                <td>{{ enseignant.nomEnseignant }}</td>
-                <td>{{ enseignant.prenom }}</td>
-                <td>{{ enseignant.emailEnseignant }}</td>
-                <td>{{ enseignant.departement }}</td>
+                <td>{{ enseignant.Nom }}</td>
+                <td>{{ enseignant.Prenom }}</td>
+                <td>{{ enseignant.Email }}</td>
                 <td>
                     <a href="{{ path('app_enseignant_show', {'id': enseignant.id}) }}">show</a>
                     <a href="{{ path('app_enseignant_edit', {'id': enseignant.id}) }}">edit</a>
@@ -31,7 +29,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="6">no records found</td>
+                <td colspan="5">no records found</td>
             </tr>
         {% endfor %}
         </tbody>

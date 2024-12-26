@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Controller;
-
 use App\Entity\Reserve;
 use App\Entity\Sale;
 use App\Entity\Promotion;

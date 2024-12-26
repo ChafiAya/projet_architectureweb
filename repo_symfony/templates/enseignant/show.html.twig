@@ -12,20 +12,20 @@
                 <td>{{ enseignant.id }}</td>
             </tr>
             <tr>
-                <th>Nom_enseignant</th>
-                <td>{{ enseignant.nomEnseignant }}</td>
+                <th>Nom</th>
+                <td>{{ enseignant.nom }}</td>
             </tr>
             <tr>
                 <th>Prenom</th>
                 <td>{{ enseignant.prenom }}</td>
             </tr>
             <tr>
-                <th>Email_enseignant</th>
-                <td>{{ enseignant.emailEnseignant }}</td>
+                <th>Email</th>
+                <td>{{ enseignant.email }}</td>
             </tr>
             <tr>
-                <th>Departement</th>
-                <td>{{ enseignant.departement }}</td>
+                <th>Matiere</th>
+                <td>{{ enseignant.idMatiere.nom }}</td> {# Assuming Matiere has a 'nom' field #}
             </tr>
         </tbody>
     </table>

@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-#[Route('/sale')]
+#[Route('/salle')]
 final class SaleController extends AbstractController
 {
     #[Route(name: 'app_sale_index', methods: ['GET'])]
