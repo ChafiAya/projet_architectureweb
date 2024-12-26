@@ -30,6 +30,35 @@ Encore
     // but, you probably want this, unless you're building a single-page app
     .enableSingleRuntimeChunk()
 
+    .copyFiles({
+        from: './assets/lib/animate',
+        to: 'lib/animate/[name].[ext]' 
+    })
+    .copyFiles({
+        from: './assets/lib/owlcarousel/assets',
+        to: 'lib/owlcarousel/[name].[ext]'
+    })
+    .copyFiles({
+        from: './assets/lib/wow',
+        to: 'lib/wow/[name].[ext]' 
+    })
+    .copyFiles({
+        from: './assets/lib/waypoints',
+        to: 'lib/waypoints/[name].[ext]'
+    })
+    .copyFiles({
+        from: './assets/lib/easing',
+        to: 'lib/easing/[name].[ext]' 
+    })
+    .copyFiles({
+        from: './assets/lib/owlcarousel',
+        to: 'lib/owlcarousel/[name].[ext]' 
+    })
+    .copyFiles({
+        from: './assets/js',
+        to: 'js/[name].[ext]'
+    })
+    
     /*
      * FEATURE CONFIG
      *
