@@ -117,4 +117,24 @@ class Sale
 
         return $this;
     }
+
+    //fonction pour la gestion de disponibilite de la salle 
+
+
+    public function isDisponible(\DateTimeInterface $currentDateTime): bool
+    {
+        //on parcoure toutes les reservation avec la boucle foeach 
+        foreach ($this->reserves as $reservation) {
+            // si la reservation.dateReservation == la date actuelle et $currentDateTime et entre l'intervale de resercation (debut-fin) alors on retourne false.
+            if ($reservation->getDateReservation() == $currentDateTime->format('Y-m-d') &&
+                $currentDateTime >= $reservation->getHeureDepart() && 
+                $currentDateTime <= $reservation->getHeureFin()) {
+                    
+                return false;
+            }
+        }
+        // sinon la fonction return true ==> disponible :)
+
+        return true;
+    }
 }
