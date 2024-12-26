@@ -1,38 +1,47 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Enseignant{% endblock %}
+{% block title %}Détails de l'Enseignant{% endblock %}
 
 {% block body %}
-    <h1>Enseignant</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Détails de l'Enseignant</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Id</th>
-                <td>{{ enseignant.id }}</td>
-            </tr>
-            <tr>
-                <th>Nom_enseignant</th>
-                <td>{{ enseignant.nomEnseignant }}</td>
-            </tr>
-            <tr>
-                <th>Prenom</th>
-                <td>{{ enseignant.prenom }}</td>
-            </tr>
-            <tr>
-                <th>Email_enseignant</th>
-                <td>{{ enseignant.emailEnseignant }}</td>
-            </tr>
-            <tr>
-                <th>Departement</th>
-                <td>{{ enseignant.departement }}</td>
-            </tr>
-        </tbody>
-    </table>
+    
+    <div class="card p-4 shadow-sm">
+        <table class="table table-bordered">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>{{ enseignant.id }}</td>
+                </tr>
+                <tr>
+                    <th>Nom</th>
+                    <td>{{ enseignant.nom }}</td>
+                </tr>
+                <tr>
+                    <th>Prénom</th>
+                    <td>{{ enseignant.prenom }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ enseignant.email}}</td>
+                </tr>
+                <tr>
+                    <th>Département</th>
+                    <td>{{ enseignant.departement }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 
-    <a href="{{ path('app_enseignant_index') }}">back to list</a>
+    <!-- pour revenir à la liste, modifier et supprimer -->
+    <div class="text-center mt-4">
+        <a href="{{ path('app_enseignant_index') }}" class="btn btn-secondary">Retour à la liste</a>
+        <a href="{{ path('app_enseignant_edit', {'id': enseignant.id}) }}" class="btn btn-warning ml-2">Modifier</a>
+    </div>
 
-    <a href="{{ path('app_enseignant_edit', {'id': enseignant.id}) }}">edit</a>
-
-    {{ include('enseignant/_delete_form.html.twig') }}
+    <div class="mt-4 text-center">
+        {{ include('enseignant/_delete_form.html.twig') }}
+    </div>
+</div>
 {% endblock %}

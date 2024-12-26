@@ -25,7 +25,6 @@ class ReserveType extends AbstractType
             ->add('heure_fin', null, [
                 'widget' => 'single_text',
             ])
-            
             ->add('salles', EntityType::class, [
                 'class' => Sale::class,
                 'choice_label' => 'nom_de_salle',
@@ -33,14 +32,15 @@ class ReserveType extends AbstractType
             ])
             ->add('enseignants', EntityType::class, [
                 'class' => Enseignant::class,
-                'choice_label' => 'nom_enseignant',
+                'choice_label' => 'nom',
                 'multiple' => true,
             ])
-            ->add('promotion', EntityType::class,[
-                'class'=> Promotion::class,
-                'choice_label'=>'niveau_promotion',
-                'multiple'=>true
-
+            ->add('promotion', EntityType::class, [
+                'class' => Promotion::class,
+                'choice_label' => function (Promotion $promotion) {
+                    return $promotion->getNiveauPromotion() . ' - ' . $promotion->getEnseignement();
+                },
+                'multiple' => true,
             ])
         ;
     }

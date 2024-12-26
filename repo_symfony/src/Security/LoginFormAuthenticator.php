@@ -29,45 +29,58 @@ class LoginFormAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
-        $email = $request->getPayload()->getString('email');
-
+        // Use $request->request to get form parameters
+        $email = $request->request->get('email');
+        $password = $request->request->get('password');
+        $csrfToken = $request->request->get('_csrf_token');
+    
+        // Store the last username in the session (for showing it after a failed login attempt)
         $request->getSession()->set(SecurityRequestAttributes::LAST_USERNAME, $email);
-
+    
         return new Passport(
             new UserBadge($email),
-            new PasswordCredentials($request->getPayload()->getString('password')),
+            new PasswordCredentials($password),
             [
-                new CsrfTokenBadge('authenticate', $request->getPayload()->getString('_csrf_token')),
+                new CsrfTokenBadge('authenticate', $csrfToken),
                 new RememberMeBadge(),
             ]
         );
     }
-
+    
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
     {
-        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
-            return new RedirectResponse($targetPath);
-        }
-
-        // Retrieve the roles from the token (which should come from the User object)
-        $user = $token->getUser(); // User object
+        $user = $token->getUser(); 
+    
         if ($user instanceof User) {
-            $roles = $user->getRoles(); // Get the roles as an array
-            if (in_array('admin', $roles)) {
-                // Redirect to 'app_home' if the user has ROLE_ADMIN
+            $roles = $user->getRoles();
+             // If user has the 'ROLE_ADMIN', redirect to 'app_home'
+            if (in_array('ROLE_ADMIN', $roles)) {
                 return new RedirectResponse($this->urlGenerator->generate('app_home'));
             }
-
-            if (in_array('Enseignant', $roles)) {
-                // Redirect to 'app_enseignant_index' if the user has ROLE_ENSEIGNANT
+    
+            // If user has the 'ROLE_ENSEIGNANT', redirect to 'app_reserve_index'
+            if (in_array('ROLE_ENSEIGNANT', $roles)) {
                 return new RedirectResponse($this->urlGenerator->generate('app_reserve_index'));
             }
-        }
-
-        // Default redirection if no roles match
+    
+            // If user has the 'ROLE_ETUDIANT', redirect to 'app_reserve_index' with a filter for their promotion
+            if (in_array('ROLE_ETUDIANT', $roles)) {
+                // Get the user's promotion
+                $promotion = $user->getPromotion();
+                if ($promotion) {
+                    // Redirect to the 'app_reserve_index' route with a 'promotion_id' filter
+                    return new RedirectResponse($this->urlGenerator->generate('app_reserve_index', [
+                        'promotion_id' => $promotion->getId(),
+                    ]));
+                }
+            }
+        }    
+       
+    
+        // Default fallback if no roles matched (it should not hit this point)
         return new RedirectResponse($this->urlGenerator->generate('app_default_dashboard'));
     }
-
+    
     protected function getLoginUrl(Request $request): string
     {
         return $this->urlGenerator->generate(self::LOGIN_ROUTE);

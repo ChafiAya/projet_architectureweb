@@ -1,41 +1,50 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Enseignant index{% endblock %}
+{% block title %}Liste des Enseignants{% endblock %}
 
 {% block body %}
-    <h1>Enseignant index</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Liste des Enseignants</h1>
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Nom_enseignant</th>
-                <th>Prenom</th>
-                <th>Email_enseignant</th>
-                <th>Departement</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for enseignant in enseignants %}
-            <tr>
-                <td>{{ enseignant.id }}</td>
-                <td>{{ enseignant.nomEnseignant }}</td>
-                <td>{{ enseignant.prenom }}</td>
-                <td>{{ enseignant.emailEnseignant }}</td>
-                <td>{{ enseignant.departement }}</td>
-                <td>
-                    <a href="{{ path('app_enseignant_show', {'id': enseignant.id}) }}">show</a>
-                    <a href="{{ path('app_enseignant_edit', {'id': enseignant.id}) }}">edit</a>
-                </td>
-            </tr>
-        {% else %}
-            <tr>
-                <td colspan="6">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+    <!-- Liste des enseignants -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped">
+            <thead class="thead-light">
+                <tr>
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th>Prénom</th>
+                    <th>Email</th>
+                    <th>Département</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for enseignant in enseignants %}
+                <tr>
+                    <td>{{ enseignant.id }}</td>
+                    <td>{{ enseignant.nom}}</td>
+                    <td>{{ enseignant.prenom }}</td>
+                    <td>{{ enseignant.email }}</td>
+                    <td>{{ enseignant.departement }}</td>
+                    <td>
+                        
+                        <a href="{{ path('app_enseignant_show', {'id': enseignant.id}) }}" class="btn btn-info btn-sm">Afficher</a>
+                        <a href="{{ path('app_enseignant_edit', {'id': enseignant.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="6" class="text-center">Aucun enregistrement trouvé</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
 
-    <a href="{{ path('app_enseignant_new') }}">Create new</a>
+    <!-- Creer un nouvel enseignant -->
+    <div class="text-center mt-4">
+        <a href="{{ path('app_enseignant_new') }}" class="btn btn-success">Ajouter un Enseignant</a>
+    </div>
+</div>
 {% endblock %}

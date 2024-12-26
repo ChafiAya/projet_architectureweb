@@ -1,25 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Reservation{% endblock %}
+{% block title %}Réservations{% endblock %}
 
 {% block body %}
-
 <div class="container mt-5">
-    <h1 class="text-center mb-4">Reservationc salle de cours</h1>
+    <h1 class="text-center mb-4">Réservations de salles de cours</h1>
+
+    <!-- Bouton pour créer une nouvelle réservation -->
     <div class="mb-3">
-        <a href="{{ path('app_reserve_new') }}" class="btn btn-success">Cree une nouvelle reservation</a>
+        <a href="{{ path('app_reserve_new') }}" class="btn btn-success">Créer une nouvelle réservation</a>
+        <a href="{{ path('app_calendrier') }}" class="btn btn-success mx-2">Voir le Calendrier</a>
     </div>
-    <!-- Search Form -->
-    <form method="get" action="{{ path('app_reserve_index') }}" class="p-4 border rounded shadow-sm">
+
+
+    <form method="get" action="{{ path('app_reserve_index') }}" class="p-4 border rounded shadow-sm mb-4">
         <div class="mb-3">
             <label for="salle" class="form-label">Salle :</label>
             <select id="salle" name="salle_id" class="form-select">
                 <option value="">-- Sélectionner une Salle --</option>
                 {% for salle in salles %}
                     <option value="{{ salle.id }}" 
-                        {{ app.request.query.get('salle_id') == salle.id ? 'selected' : '' }}>
-                        {{ salle.nomDeSalle }}
-                    </option>
+                        {{ app.request.query.get('salle_id') == salle.id ? 'selected' : '' }}>{{ salle.nomDeSalle }}</option>
                 {% endfor %}
             </select>
         </div>
@@ -47,114 +48,48 @@
     </form>
 
 
-    <!-- Reservation Table -->
-    <table class="table table-striped table-bordered mt-4">
+    <table class="table table-striped table-bordered">
         <thead class="thead-dark">
             <tr>
                 <th scope="col">Id</th>
-                <th scope="col">Date_reservation</th>
-                <th scope="col">Heure_depart</th>
-                <th scope="col">Heure_fin</th>
+                <th scope="col">Date réservation</th>
+                <th scope="col">Heure départ</th>
+                <th scope="col">Heure fin</th>
                 <th scope="col">Nom Enseignant</th> 
                 <th scope="col">Promotion</th>
                 <th scope="col">Salle</th>
-                <th scope="col">actions</th>
+                <th scope="col">Actions</th>
             </tr>
         </thead>
         <tbody>
         {% set user = app.user %}
-        
+
         {% for reserve in reserves %}
             <tr>
                 <td>{{ reserve.id }}</td>
                 <td>{{ reserve.dateReservation|date('Y-m-d') }}</td>
-                <td>{{ reserve.heureDepart|date('H:i:s')  }}</td>
-                <td>{{  reserve.heureFin|date('H:i:s') }}</td>
-                <td>{{ reserve.enseignants|first.getNomEnseignant() }}</td>
+                <td>{{ reserve.heureDepart|date('H:i:s') }}</td>
+                <td>{{ reserve.heureFin|date('H:i:s') }}</td>
+                <td>{{ reserve.enseignants|first.getNom() }}</td>
                 <td>{{ reserve.promotion|first.getEnseignement() }}</td>
-                <td>{{ reserve.salles|first.getNomDeSalle() }}
+                <td>{{ reserve.salles|first.getNomDeSalle() }}</td>
                 <td>
-                    <a href="{{ path('app_reserve_show', {'id': reserve.id}) }}">Afficher</a>
-                    <a href="{{ path('app_reserve_edit', {'id': reserve.id}) }}">Modifier</a>
+                    <a href="{{ path('app_reserve_show', {'id': reserve.id}) }}" class="btn btn-info btn-sm">Afficher</a>
+                    <a href="{{ path('app_reserve_edit', {'id': reserve.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+
+                    <form method="post" action="{{ path('app_reserve_delete', {'id': reserve.id}) }}" style="display:inline;">
+                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reserve.id) }}">
+                        <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
+                    </form>
                 </td>
             </tr>
-            <tr>
-                {# <td colspan="6">aucune entrer pour le moment</td> #}
-            {% if user and 'Enseignant' in user.roles %}
-                {# Si l'utilisateur est enseignant, on filtre par son email #}
-                {% for enseignant in reserve.enseignants %}
-                    {% if enseignant.emailEnseignant == user.email %}
-                        <tr>
-                            <td>{{ reserve.id }}</td>
-                            <td>{{ reserve.dateReservation ? reserve.dateReservation|date('Y-m-d') : '' }}</td>
-                            <td>{{ reserve.heureDepart ? reserve.heureDepart|date('H:i:s') : '' }}</td>
-                            <td>{{ reserve.heureFin ? reserve.heureFin|date('H:i:s') : '' }}</td>
-                            <td>
-                                {% for salle in reserve.salles %}
-                                    {{ salle.getNomDeSalle() }}{% if not loop.last %}, {% endif %}
-                                {% endfor %}
-                            </td>
-                            <td>
-                                {% for enseignant in reserve.enseignants %}
-                                    {{ enseignant.emailEnseignant }}{% if not loop.last %}, {% endif %}
-                                {% endfor %}
-                            </td>
-                            <td>
-                                {% for promotion in reserve.promotion %}
-                                    {{ promotion.getNiveauPromotion() }}{% if not loop.last %}, {% endif %}
-                                {% endfor %}
-                            </td>
-                            <td>
-                                <a href="{{ path('app_reserve_show', {'id': reserve.id}) }}">show</a>
-                                <a href="{{ path('app_reserve_edit', {'id': reserve.id}) }}">edit</a>
-                                <form method="post" action="{{ path('app_reserve_delete', {'id': reserve.id}) }}" style="display:inline;">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reserve.id) }}">
-                                    <button type="submit">delete</button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endif %}
-                {% endfor %}
-            {% else %}
-                {# Si l'utilisateur n'est pas enseignant, on affiche toutes les réservations #}
-                <tr>
-                    <td>{{ reserve.id }}</td>
-                    <td>{{ reserve.dateReservation ? reserve.dateReservation|date('Y-m-d') : '' }}</td>
-                    <td>{{ reserve.heureDepart ? reserve.heureDepart|date('H:i:s') : '' }}</td>
-                    <td>{{ reserve.heureFin ? reserve.heureFin|date('H:i:s') : '' }}</td>
-                    <td>
-                        {% for salle in reserve.salles %}
-                            {{ salle.getNomDeSalle() }}{% if not loop.last %}, {% endif %}
-                        {% endfor %}
-                    </td>
-                    <td>
-                        {% for enseignant in reserve.enseignants %}
-                            {{ enseignant.emailEnseignant }}{% if not loop.last %}, {% endif %}
-                        {% endfor %}
-                    </td>
-                    <td>
-                        {% for promotion in reserve.promotion %}
-                            {{ promotion.getNiveauPromotion() }}{% if not loop.last %}, {% endif %}
-                        {% endfor %}
-                    </td>
-                    <td>
-                        <a href="{{ path('app_reserve_show', {'id': reserve.id}) }}">show</a>
-                        <a href="{{ path('app_reserve_edit', {'id': reserve.id}) }}">edit</a>
-                        <form method="post" action="{{ path('app_reserve_delete', {'id': reserve.id}) }}" style="display:inline;">
-                            <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ reserve.id) }}">
-                            <button type="submit">delete</button>
-                        </form>
-                    </td>
-                </tr>
-            {% endif %}
         {% else %}
             <tr>
-                <td colspan="9">Aucun reservation</td>
+                <td colspan="8" class="text-center">Aucune réservation trouvée</td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
-
 
 </div>
 {% endblock %}

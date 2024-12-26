@@ -4,6 +4,7 @@
 
 {% block body %}
 <div class="container mt-5">
+
     {% for message in app.flashes('error') %}
         <div class="alert alert-danger" role="alert">
             {{ message }}
