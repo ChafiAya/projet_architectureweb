@@ -1,7 +1,6 @@
 <?php
 
 namespace App\Entity;
-
 use App\Repository\EnseignantRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,23 +14,17 @@ class Enseignant
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $nom_enseignant = null;
+    #[ORM\Column(length: 55)]
+    private ?string $Nom = null;
+
+    #[ORM\Column(length: 55)]
+    private ?string $Prenom = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $prenom = null;
+    private ?string $Email = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $email_enseignant = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $departement = null;
-
-    /**
-     * @var Collection<int, Matiere>
-     */
-    #[ORM\ManyToMany(targetEntity: Matiere::class, mappedBy: 'enseignant')]
-    private Collection $matieres;
+    #[ORM\ManyToOne(inversedBy: 'enseignants')]
+    private ?Matiere $id_matiere = null;
 
     /**
      * @var Collection<int, Reserve>
@@ -41,7 +34,6 @@ class Enseignant
 
     public function __construct()
     {
-        $this->matieres = new ArrayCollection();
         $this->reserves = new ArrayCollection();
     }
 
@@ -50,77 +42,50 @@ class Enseignant
         return $this->id;
     }
 
-    public function getNomEnseignant(): ?string
+    public function getNom(): ?string
     {
-        return $this->nom_enseignant;
+        return $this->Nom;
     }
 
-    public function setNomEnseignant(string $nom_enseignant): static
+    public function setNom(string $Nom): static
     {
-        $this->nom_enseignant = $nom_enseignant;
+        $this->Nom = $Nom;
 
         return $this;
     }
 
     public function getPrenom(): ?string
     {
-        return $this->prenom;
+        return $this->Prenom;
     }
 
-    public function setPrenom(string $prenom): static
+    public function setPrenom(string $Prenom): static
     {
-        $this->prenom = $prenom;
+        $this->Prenom = $Prenom;
 
         return $this;
     }
 
-    public function getEmailEnseignant(): ?string
+    public function getEmail(): ?string
     {
-        return $this->email_enseignant;
+        return $this->Email;
     }
 
-    public function setEmailEnseignant(string $email_enseignant): static
+    public function setEmail(string $Email): static
     {
-        $this->email_enseignant = $email_enseignant;
+        $this->Email = $Email;
 
         return $this;
     }
 
-    public function getDepartement(): ?string
+    public function getIdMatiere(): ?Matiere
     {
-        return $this->departement;
+        return $this->id_matiere;
     }
 
-    public function setDepartement(?string $departement): static
+    public function setIdMatiere(?Matiere $id_matiere): static
     {
-        $this->departement = $departement;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Matiere>
-     */
-    public function getMatieres(): Collection
-    {
-        return $this->matieres;
-    }
-
-    public function addMatiere(Matiere $matiere): static
-    {
-        if (!$this->matieres->contains($matiere)) {
-            $this->matieres->add($matiere);
-            $matiere->addEnseignant($this);
-        }
-
-        return $this;
-    }
-
-    public function removeMatiere(Matiere $matiere): static
-    {
-        if ($this->matieres->removeElement($matiere)) {
-            $matiere->removeEnseignant($this);
-        }
+        $this->id_matiere = $id_matiere;
 
         return $this;
     }
@@ -133,20 +98,20 @@ class Enseignant
         return $this->reserves;
     }
 
-    public function addReserf(Reserve $reserf): static
+    public function addReserve(Reserve $reserve): static
     {
-        if (!$this->reserves->contains($reserf)) {
-            $this->reserves->add($reserf);
-            $reserf->addEnseignant($this);
+        if (!$this->reserves->contains($reserve)) {
+            $this->reserves->add($reserve);
+            $reserve->addEnseignant($this);  
         }
 
         return $this;
     }
 
-    public function removeReserf(Reserve $reserf): static
+    public function removeReserve(Reserve $reserve): static
     {
-        if ($this->reserves->removeElement($reserf)) {
-            $reserf->removeEnseignant($this);
+        if ($this->reserves->removeElement($reserve)) {
+            $reserve->removeEnseignant($this);  
         }
 
         return $this;

@@ -64,8 +64,8 @@ class RegistrationFormType extends AbstractType
             ->add('roles', ChoiceType::class, [
                 'label' => 'Select your role',
                 'choices' => [
-                    'Enseignant' => 'Enseignant',
-                    'Etudiant' => 'Etudiant',
+                    'Enseignant' => 'ROLE_ENSEIGNANT',
+                    'Etudiant' => 'ROLE_ETUDIANT',
                 ],
                 'expanded' => true,
                 'multiple' => false,

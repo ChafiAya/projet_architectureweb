@@ -1,9 +1,6 @@
 <?php
 
 namespace App\Controller;
-// namespace App\ApiResource;
- 
-use ApiPlatform\Metadata\ApiResource;
 
 use App\Entity\Enseignant;
 use App\Form\EnseignantType;
@@ -14,8 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-
-#[ApiResource]
 #[Route('/enseignant')]
 final class EnseignantController extends AbstractController
 {

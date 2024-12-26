@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\MatiereRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: MatiereRepository::class)]
@@ -15,28 +16,24 @@ class Matiere
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $code_mat = null;
+    #[ORM\Column(length: 55)]
+    private ?string $nom = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $nom_matiere = null;
+    #[ORM\Column(length: 55, unique: true)]
+    private ?string $codeMatiere = null;
 
-    /**
-     * @var Collection<int, Promotion>
-     */
-    #[ORM\ManyToMany(targetEntity: Promotion::class, mappedBy: 'matieres')]
-    private Collection $promotions;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
 
     /**
      * @var Collection<int, Enseignant>
      */
-    #[ORM\ManyToMany(targetEntity: Enseignant::class, inversedBy: 'matieres')]
-    private Collection $enseignant;
+    #[ORM\OneToMany(targetEntity: Enseignant::class, mappedBy: 'id_matiere')]
+    private Collection $id_enseignant;
 
     public function __construct()
     {
-        $this->promotions = new ArrayCollection();
-        $this->enseignant = new ArrayCollection();
+        $this->id_enseignant = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -44,53 +41,38 @@ class Matiere
         return $this->id;
     }
 
-    public function getCodeMat(): ?string
+    public function getNom(): ?string
     {
-        return $this->code_mat;
+        return $this->nom;
     }
 
-    public function setCodeMat(string $code_mat): static
+    public function setNom(string $nom): self
     {
-        $this->code_mat = $code_mat;
+        $this->nom = $nom;
 
         return $this;
     }
 
-    public function getNomMatiere(): ?string
+    public function getCodeMatiere(): ?string
     {
-        return $this->nom_matiere;
+        return $this->codeMatiere;
     }
 
-    public function setNomMatiere(string $nom_matiere): static
+    public function setCodeMatiere(string $codeMatiere): self
     {
-        $this->nom_matiere = $nom_matiere;
+        $this->codeMatiere = $codeMatiere;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Promotion>
-     */
-    public function getPromotions(): Collection
+    public function getDescription(): ?string
     {
-        return $this->promotions;
+        return $this->description;
     }
 
-    public function addPromotion(Promotion $promotion): static
+    public function setDescription(?string $description): self
     {
-        if (!$this->promotions->contains($promotion)) {
-            $this->promotions->add($promotion);
-            $promotion->addMatiere($this);
-        }
-
-        return $this;
-    }
-
-    public function removePromotion(Promotion $promotion): static
-    {
-        if ($this->promotions->removeElement($promotion)) {
-            $promotion->removeMatiere($this);
-        }
+        $this->description = $description;
 
         return $this;
     }
@@ -98,23 +80,29 @@ class Matiere
     /**
      * @return Collection<int, Enseignant>
      */
-    public function getEnseignant(): Collection
+    public function getIdEnseignant(): Collection
     {
-        return $this->enseignant;
+        return $this->id_enseignant;
     }
 
-    public function addEnseignant(Enseignant $enseignant): static
+    public function addIdEnseignant(Enseignant $idEnseignant): static
     {
-        if (!$this->enseignant->contains($enseignant)) {
-            $this->enseignant->add($enseignant);
+        if (!$this->id_enseignant->contains($idEnseignant)) {
+            $this->id_enseignant->add($idEnseignant);
+            $idEnseignant->setIdMatiere($this);
         }
 
         return $this;
     }
 
-    public function removeEnseignant(Enseignant $enseignant): static
+    public function removeIdEnseignant(Enseignant $idEnseignant): static
     {
-        $this->enseignant->removeElement($enseignant);
+        if ($this->id_enseignant->removeElement($idEnseignant)) {
+            // set the owning side to null (unless already changed)
+            if ($idEnseignant->getIdMatiere() === $this) {
+                $idEnseignant->setIdMatiere(null);
+            }
+        }
 
         return $this;
     }
