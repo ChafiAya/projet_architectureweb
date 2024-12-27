@@ -51,6 +51,16 @@ final class ReserveController extends AbstractController
                 $this->addFlash('error', 'Aucun enseignant trouvé pour cet utilisateur.');
             }
         }
+        elseif ($this->isGranted('ROLE_ETUDIANT')) {
+            $promotion = $user->getPromotion();
+        
+            if ($promotion) {
+                $reserves = $reserveRepository->SelectPromotion($promotion);
+            } else {
+                $this->addFlash('error', 'Aucune promotion trouvée pour cet étudiant.');
+                $reserves = [];
+            }
+        }
 
         // Récupération des salles et promotions pour l'affichage
         $salles = $saleRepository->findAll();

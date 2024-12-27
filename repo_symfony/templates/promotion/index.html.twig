@@ -15,7 +15,9 @@
                     <th>Enseignement</th>
                     <th>Choix</th>
                     <th>Nombre d'Étudiants</th>
-                    <th>Actions</th>
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENSEIGNANT') %}
+                        <th>Actions</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -26,10 +28,12 @@
                     <td>{{ promotion.enseignement }}</td>
                     <td>{{ promotion.choix }}</td>
                     <td>{{ promotion.nbrEtudiant }}</td>
-                    <td>
-                        <a href="{{ path('app_promotion_show', {'id': promotion.id}) }}" class="btn btn-info btn-sm">Afficher</a>
-                        <a href="{{ path('app_promotion_edit', {'id': promotion.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
-                    </td>
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENSEIGNANT') %}
+                        <td>
+                            <a href="{{ path('app_promotion_show', {'id': promotion.id}) }}" class="btn btn-info btn-sm">Afficher</a>
+                            <a href="{{ path('app_promotion_edit', {'id': promotion.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        </td>
+                    {% endif %}
                 </tr>
             {% else %}
                 <tr>

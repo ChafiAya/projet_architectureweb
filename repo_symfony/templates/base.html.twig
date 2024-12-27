@@ -64,22 +64,24 @@
                     <div class="navbar-nav ms-auto p-4 p-lg-0">
                         {% if is_granted('ROLE_ADMIN') %}
                             <a href="{{ path('app_register') }}" class="nav-item nav-link">Ajouter un role</a>
-
+                            <a href="{{ path('app_promotion_index') }}" class="nav-item nav-link">Promotion(s)</a>
                         {% endif %}
                         {# <a href="index.html" class="nav-item nav-link active">Home</a> #}
                         <a href="{{ path('app_enseignant_index') }}" class="nav-item nav-link">Enseignant(s)</a>
                         <a href="{{ path('app_sale_index') }}" class="nav-item nav-link">Salle(s)</a>
                         <a href="{{ path('app_matiere_index') }}" class="nav-item nav-link">Matiere</a>
-                        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENSEIGNANT') %}
+                        
                             <div class="nav-item dropdown">
                                 <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">Réservation</a>
                                 <div class="dropdown-menu fade-down m-0">
+                                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENSEIGNANT') %}
                                     <a href="{{ path('app_reserve_new') }}" class="dropdown-item">Crée une réservation</a>
+                                {% endif %}
                                     <a href="{{ path('app_reserve_index') }}" class="dropdown-item">Liste des reservation</a>
                                     <a href="{{ path('app_calendrier') }}" class="dropdown-item">Calendrier</a>
                                 </div>
                             </div>
-                        {% endif %}
+                        
                     </div>
                     {% if app.user  %}
                         <a href="{{ path('app_logout') }}" class="btn btn-danger py-4 px-lg-3 d-none d-lg-block">Déconnecter<i class="fa fa-power-off ms-2"></i></a>

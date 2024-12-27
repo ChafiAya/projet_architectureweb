@@ -14,7 +14,10 @@
                     <th scope="col">Étage</th>
                     <th scope="col">Nom de la Salle</th>
                     <th scope="col">Capacité</th>
-                    <th scope="col">Actions</th>
+
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENSEIGNANT') %}
+                        <th scope="col">Actions</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -24,11 +27,14 @@
                     <td>{{ sale.etage }}</td>
                     <td>{{ sale.nomDeSalle }}</td>
                     <td>{{ sale.capacite }}</td>
-                    <td>
-                    
-                        <a href="{{ path('app_sale_show', {'id': sale.id}) }}" class="btn btn-info btn-sm">Afficher</a>
-                        <a href="{{ path('app_sale_edit', {'id': sale.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
-                    </td>
+
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENSEIGNANT') %}
+                        <td>
+                        
+                            <a href="{{ path('app_sale_show', {'id': sale.id}) }}" class="btn btn-info btn-sm">Afficher</a>
+                            <a href="{{ path('app_sale_edit', {'id': sale.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        </td>
+                    {% endif %}
                 </tr>
             {% else %}
                 <tr>

@@ -123,6 +123,17 @@ class ReserveRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+        //cette methode nous permet de selectionner de recuperer la promotion qui est conerner par une reservation
+        public function SelectPromotion(Promotion $promotion): array
+        {
+            return $this->createQueryBuilder('r')
+                ->innerJoin('r.promotion', 'p')
+                ->where('p = :promotion')
+                ->setParameter('promotion', $promotion)
+                ->getQuery()
+                ->getResult();
+        }
     public function findByEnseignant(User $enseignant)
     {
         return $this->createQueryBuilder('r')

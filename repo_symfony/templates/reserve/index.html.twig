@@ -8,7 +8,9 @@
 
     <!-- Bouton pour créer une nouvelle réservation -->
     <div class="mb-3">
-        <a href="{{ path('app_reserve_new') }}" class="btn btn-success">Créer une nouvelle réservation</a>
+        {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENSEIGNANT') %}
+            <a href="{{ path('app_reserve_new') }}" class="btn btn-success">Créer une nouvelle réservation</a>
+        {% endif %}
         <a href="{{ path('app_calendrier') }}" class="btn btn-success mx-2">Voir le Calendrier</a>
     </div>
 
@@ -58,7 +60,9 @@
                 <th scope="col">Nom Enseignant</th> 
                 <th scope="col">Promotion</th>
                 <th scope="col">Salle</th>
+                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENSEIGNANT') %}
                 <th scope="col">Actions</th>
+                {% endif %}
             </tr>
         </thead>
         <tbody>
@@ -79,6 +83,7 @@
                 </td>
                 <td>{{ reserve.promotion|first.getEnseignement() }}</td>
                 <td>{{ reserve.salles|first.getNomDeSalle() }}</td>
+                {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENSEIGNANT') %}
                 <td>
                     <a href="{{ path('app_reserve_show', {'id': reserve.id}) }}" class="btn btn-info btn-sm">Afficher</a>
                     <a href="{{ path('app_reserve_edit', {'id': reserve.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
@@ -88,6 +93,7 @@
                         <button type="submit" class="btn btn-danger btn-sm">Supprimer</button>
                     </form>
                 </td>
+                {% endif %}
             </tr>
         {% else %}
             <tr>

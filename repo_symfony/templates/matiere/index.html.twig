@@ -14,7 +14,10 @@
                     <th>Id</th>
                     <th>Code Matière</th>
                     <th>Nom de la Matière</th>
-                    <th>Actions</th>
+
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENSEIGNANT') %}
+                        <th>Actions</th>
+                    {% endif %}
                 </tr>
             </thead>
             <tbody>
@@ -23,11 +26,14 @@
                     <td>{{ matiere.id }}</td>
                     <td>{{ matiere.codeMatiere }}</td>
                     <td>{{ matiere.nom }}</td>
-                    <td>
-                        
-                        <a href="{{ path('app_matiere_show', {'id': matiere.id}) }}" class="btn btn-info btn-sm">Afficher</a>
-                        <a href="{{ path('app_matiere_edit', {'id': matiere.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
-                    </td>
+
+                    {% if is_granted('ROLE_ADMIN') or is_granted('ROLE_ENSEIGNANT') %}
+                        <td>
+                            
+                            <a href="{{ path('app_matiere_show', {'id': matiere.id}) }}" class="btn btn-info btn-sm">Afficher</a>
+                            <a href="{{ path('app_matiere_edit', {'id': matiere.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        </td>
+                    {% endif %}
                 </tr>
             {% else %}
                 <tr>
