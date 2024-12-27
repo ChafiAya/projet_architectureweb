@@ -15,7 +15,7 @@
 7. [Flux de Réservation](#flux-de-réservation)
 8. [Défis et Solutions](#défis-et-solutions)
 9. [Améliorations Futures](#améliorations-futures)
-10. [Captures de l'application](#Capture-de-lapplication)
+10. [Captures de l'application](#captures-de-lapplication)
 ---
 
 ## Aperçu du Projet
