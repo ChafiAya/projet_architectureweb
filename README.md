@@ -34,7 +34,7 @@ Ce projet est une application web conçue pour simplifier la réservation des sa
 
 1. Clonez le dépôt :
    ```bash
-   git clone <repository_url>
+   git clone [<repository_url>](https://github.com/ChafiAya/projet_architectureweb.git)
    ```
 2. Naviguez dans le répertoire du projet :
    ```bash
