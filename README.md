@@ -15,7 +15,7 @@
 7. [Flux de Réservation](#flux-de-réservation)
 8. [Défis et Solutions](#défis-et-solutions)
 9. [Améliorations Futures](#améliorations-futures)
-10. [Capture de l'application](#Capture-de-l'application)
+10. [Captures de l'application](#Capture-de-l'application)
 ---
 
 ## Aperçu du Projet
@@ -149,33 +149,33 @@ L'application gère trois rôles avec des privilèges spécifiques :
 - Implémenter des notifications pour les réservations à venir.
 - Optimiser les performances avec des stratégies de mise en cache.
 
-### Capture de l'application
-## Page Auth 
+## Captures de l'application
+### Page Auth 
 <img width="803" alt="page auth" src="https://github.com/user-attachments/assets/2d096a75-5986-4cc2-a660-58ebf69c2119" />
 
-## Page Admin
+### Page Admin
 <img width="938" alt="page_admin" src="https://github.com/user-attachments/assets/19361765-4935-4d98-a73e-41e283c685ab" />
 
-## ajout de role par l'admin
+### ajout de role par l'admin
 <img width="889" alt="ajout_de_role_par_l'admin" src="https://github.com/user-attachments/assets/8a79209f-a050-4dc6-a33f-d4cc51b55331" />
 
-## Creation de reservation par un enseignant
+### Creation de reservation par un enseignant
 <img width="902" alt="creation_reservation_par_enseignant" src="https://github.com/user-attachments/assets/1df54253-5328-487d-b633-4e1b7dfb48e2" />
 
 
-## Liste reservation enseignant 
+### Liste reservation enseignant 
 <img width="821" alt="reserve_enseignant" src="https://github.com/user-attachments/assets/52abc82a-932e-47c3-aa0a-327578f38255" />
 
-## Conflit de reservation 
+### Conflit de reservation 
 <img width="930" alt="conflit_reservation" src="https://github.com/user-attachments/assets/bd44afe9-2ef9-431d-869a-8dad8986f674" />
 
-## Liste de reservation pour la promo 1
+### Liste de reservation pour la promo 1
 <img width="893" alt="reservation_pour_etudiant" src="https://github.com/user-attachments/assets/ba399b0b-c696-4575-abb0-1e0f2138b7c9" />
 
-## Liste de reservation pour la promo 2
+### Liste de reservation pour la promo 2
 <img width="917" alt="reservation_etudiant_autre_promo" src="https://github.com/user-attachments/assets/4d892f20-af6b-4808-a38f-96bcac5cb873" />
 
-## Calendrier de reservation 
+### Calendrier de reservation 
 <img width="547" alt="calendrier de reservation" src="https://github.com/user-attachments/assets/9ecb622f-aaf5-42e7-a10f-9d0682146e7d" />
 
 
