@@ -15,7 +15,7 @@
 7. [Flux de Réservation](#flux-de-réservation)
 8. [Défis et Solutions](#défis-et-solutions)
 9. [Améliorations Futures](#améliorations-futures)
-10. Capture de l'application
+10. [Capture de l'application](#Capture-de-l'application)
 ---
 
 ## Aperçu du Projet
@@ -147,8 +147,8 @@ L'application gère trois rôles avec des privilèges spécifiques :
 ## Améliorations Futures
 - Implémenter des notifications pour les réservations à venir.
 - Optimiser les performances avec des stratégies de mise en cache.
-### Capture de l'application
 
+### Capture de l'application
 ## Page Auth 
 <img width="803" alt="page auth" src="https://github.com/user-attachments/assets/2d096a75-5986-4cc2-a660-58ebf69c2119" />
 
