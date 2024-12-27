@@ -6,7 +6,6 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Détails de la Matière</h1>
 
-    
     <div class="card p-4 shadow-sm">
         <table class="table table-bordered">
             <tbody>
@@ -16,24 +15,27 @@
                 </tr>
                 <tr>
                     <th>Code de la Matière</th>
-                    <td>{{  matiere.codeMatiere}}</td>
+                    <td>{{ matiere.codeMatiere }}</td>
                 </tr>
                 <tr>
                     <th>Nom de la Matière</th>
-                    <td>{{  matiere.nom }}</td>
+                    <td>{{ matiere.nom }}</td>
                 </tr>
             </tbody>
         </table>
     </div>
 
-    
     <div class="text-center mt-4">
         <a href="{{ path('app_matiere_index') }}" class="btn btn-secondary">Retour à la liste</a>
-        <a href="{{ path('app_matiere_edit', {'id': matiere.id}) }}" class="btn btn-warning ml-2">Modifier</a>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_matiere_edit', {'id': matiere.id}) }}" class="btn btn-warning ml-2">Modifier</a>
+        {% endif %}
     </div>
 
     <div class="mt-4 text-center">
-        {{ include('matiere/_delete_form.html.twig') }}
+        {% if is_granted('ROLE_ADMIN') %}
+            {{ include('matiere/_delete_form.html.twig') }}
+        {% endif %}
     </div>
 </div>
 {% endblock %}

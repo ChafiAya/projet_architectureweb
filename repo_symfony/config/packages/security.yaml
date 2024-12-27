@@ -39,12 +39,12 @@ security:
 
     access_control:
      
-     - { path: ^/enseignant, roles: ROLE_ADMIN }
-     - { path: ^/matiere, roles: ROLE_ADMIN }
-     - { path: ^/promotion, roles: ROLE_ADMIN }
-     - { path: ^/salle, roles: ROLE_ADMIN }
+     #- { path: ^/enseignant, roles: ROLE_ADMIN }
+     #- { path: ^/matiere, roles: ROLE_ADMIN }
+     #- { path: ^/promotion, roles: ROLE_ADMIN }
+     # - { path: ^/salle, roles: ROLE_ADMIN }
      - { path: ^/register, roles: ROLE_ADMIN }
-     
+     - { path: ^/reserve/new, roles: [ROLE_ADMIN] }
     
   
 

@@ -35,11 +35,14 @@
 
     <div class="text-center mt-4">
         <a href="{{ path('app_sale_index') }}" class="btn btn-secondary">Retour à la liste</a>
-        <a href="{{ path('app_sale_edit', {'id': sale.id}) }}" class="btn btn-warning ml-2">Modifier</a>
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_sale_edit', {'id': sale.id}) }}" class="btn btn-warning ml-2">Modifier</a>
+        {% endif %}
     </div>
-
+ {% if is_granted('ROLE_ADMIN') %}
     <div class="mt-4 text-center">
         {{ include('sale/_delete_form.html.twig') }}
     </div>
+    {% endif %}
 </div>
 {% endblock %}

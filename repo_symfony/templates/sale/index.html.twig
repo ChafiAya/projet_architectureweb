@@ -25,9 +25,10 @@
                     <td>{{ sale.nomDeSalle }}</td>
                     <td>{{ sale.capacite }}</td>
                     <td>
-                    
                         <a href="{{ path('app_sale_show', {'id': sale.id}) }}" class="btn btn-info btn-sm">Afficher</a>
-                        <a href="{{ path('app_sale_edit', {'id': sale.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_sale_edit', {'id': sale.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}
@@ -38,8 +39,11 @@
             </tbody>
         </table>
     </div>
-    <div class="text-center mt-4">
-        <a href="{{ path('app_sale_new') }}" class="btn btn-success">Ajouter une nouvelle salle</a>
-    </div>
+
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="text-center mt-4">
+            <a href="{{ path('app_sale_new') }}" class="btn btn-success">Ajouter une nouvelle salle</a>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

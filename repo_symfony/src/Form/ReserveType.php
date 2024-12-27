@@ -14,33 +14,36 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 class ReserveType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
-    {
-        $builder
-            ->add('date_reservation', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('heure_depart', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('heure_fin', null, [
-                'widget' => 'single_text',
-            ])
-            ->add('salles', EntityType::class, [
-                'class' => Sale::class,
-                'choice_label' => 'nom_de_salle',
-                'multiple' => true,
-            ])
-            ->add('promotion', EntityType::class, [
-                'class' => Promotion::class,
-                'choice_label' => function (Promotion $promotion) {
-                    return $promotion->getNiveauPromotion() . ' - ' . $promotion->getEnseignement();
-                },
-                'multiple' => true,
-            ])
-        ;
+{
+    $builder
+        ->add('date_reservation', null, [
+            'widget' => 'single_text',
+        ])
+        ->add('heure_depart', null, [
+            'widget' => 'single_text',
+        ])
+        ->add('heure_fin', null, [
+            'widget' => 'single_text',
+        ])
+        ->add('salles', EntityType::class, [
+            'class' => Sale::class,
+            'choice_label' => 'nom_de_salle',
+            'multiple' => true,
+        ])
+        ->add('enseignants', EntityType::class, [
+            'class' => Enseignant::class,
+            'choice_label' => 'Nom', 
+            'multiple' => true,
+        ])
+        ->add('promotion', EntityType::class, [
+            'class' => Promotion::class,
+            'choice_label' => function (Promotion $promotion) {
+                return $promotion->getNiveauPromotion() . ' - ' . $promotion->getEnseignement();
+            },
+            'multiple' => true,
+        ]);
+}
 
-        
-    }
 
     public function configureOptions(OptionsResolver $resolver): void
     {

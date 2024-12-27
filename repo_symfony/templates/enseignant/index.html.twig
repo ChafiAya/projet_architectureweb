@@ -23,14 +23,16 @@
             {% for enseignant in enseignants %}
                 <tr>
                     <td>{{ enseignant.id }}</td>
-                    <td>{{ enseignant.nom}}</td>
+                    <td>{{ enseignant.nom }}</td>
                     <td>{{ enseignant.prenom }}</td>
                     <td>{{ enseignant.email }}</td>
                     {# <td>{{ enseignant.departement }}</td> #}
                     <td>
-                        
                         <a href="{{ path('app_enseignant_show', {'id': enseignant.id}) }}" class="btn btn-info btn-sm">Afficher</a>
-                        <a href="{{ path('app_enseignant_edit', {'id': enseignant.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_enseignant_edit', {'id': enseignant.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}
@@ -42,9 +44,11 @@
         </table>
     </div>
 
-    <!-- Creer un nouvel enseignant -->
-    <div class="text-center mt-4">
-        <a href="{{ path('app_enseignant_new') }}" class="btn btn-success">Ajouter un Enseignant</a>
-    </div>
+    {# Only show the "Ajouter un Enseignant" button if the user has ROLE_ADMIN #}
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="text-center mt-4">
+            <a href="{{ path('app_enseignant_new') }}" class="btn btn-success">Ajouter un Enseignant</a>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

@@ -6,7 +6,6 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Détails de l'Enseignant</h1>
 
-    
     <div class="card p-4 shadow-sm">
         <table class="table table-bordered">
             <tbody>
@@ -24,9 +23,8 @@
                 </tr>
                 <tr>
                     <th>Email</th>
-                    <td>{{ enseignant.email}}</td>
+                    <td>{{ enseignant.email }}</td>
                 </tr>
-                
             </tbody>
         </table>
     </div>
@@ -34,11 +32,16 @@
     <!-- pour revenir à la liste, modifier et supprimer -->
     <div class="text-center mt-4">
         <a href="{{ path('app_enseignant_index') }}" class="btn btn-secondary">Retour à la liste</a>
-        <a href="{{ path('app_enseignant_edit', {'id': enseignant.id}) }}" class="btn btn-warning ml-2">Modifier</a>
+        
+        {% if is_granted('ROLE_ADMIN') %}
+            <a href="{{ path('app_enseignant_edit', {'id': enseignant.id}) }}" class="btn btn-warning ml-2">Modifier</a>
+        {% endif %}
     </div>
 
-    <div class="mt-4 text-center">
-        {{ include('enseignant/_delete_form.html.twig') }}
-    </div>
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="mt-4 text-center">
+            {{ include('enseignant/_delete_form.html.twig') }}
+        </div>
+    {% endif %}
 </div>
 {% endblock %}

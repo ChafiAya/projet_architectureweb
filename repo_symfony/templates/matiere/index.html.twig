@@ -6,7 +6,6 @@
 <div class="container mt-5">
     <h1 class="text-center mb-4">Liste des Matières</h1>
 
-
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead class="thead-light">
@@ -24,22 +23,25 @@
                     <td>{{ matiere.codeMatiere }}</td>
                     <td>{{ matiere.nom }}</td>
                     <td>
-                        
                         <a href="{{ path('app_matiere_show', {'id': matiere.id}) }}" class="btn btn-info btn-sm">Afficher</a>
-                        <a href="{{ path('app_matiere_edit', {'id': matiere.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        {% if is_granted('ROLE_ADMIN') %}
+                            <a href="{{ path('app_matiere_edit', {'id': matiere.id}) }}" class="btn btn-warning btn-sm">Modifier</a>
+                        {% endif %}
                     </td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="4" class="text-center">Aucun enregistrement trouvé</td>
+                    <td colspan="4" class="text-center">Aucune matière trouvée</td>
                 </tr>
             {% endfor %}
             </tbody>
         </table>
     </div>
 
-    <div class="text-center mt-4">
-        <a href="{{ path('app_matiere_new') }}" class="btn btn-success">Ajouter une Matière</a>
-    </div>
+    {% if is_granted('ROLE_ADMIN') %}
+        <div class="text-center mt-4">
+            <a href="{{ path('app_matiere_new') }}" class="btn btn-success">Ajouter une Matière</a>
+        </div>
+    {% endif %}
 </div>
 {% endblock %}
