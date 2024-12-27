@@ -47,6 +47,9 @@ final class ReserveController extends AbstractController
             if ($enseignant) {
                 $reserves = $reserveRepository->SelectEnseignant($enseignant);
             }
+            else{
+                $this->addFlash('error', 'Aucun enseignant trouvé pour cet utilisateur.');
+            }
         }
 
         // Récupération des salles et promotions pour l'affichage
@@ -81,18 +84,20 @@ final class ReserveController extends AbstractController
         // Create form but exclude enseignants field if user is ROLE_ENSEIGNANT
         $formOptions = [];
         if ($this->isGranted('ROLE_ENSEIGNANT')) {
-            $formOptions['exclude_enseignants'] = true;
+            $formOptions['excl ude_enseignants'] = true;
         }
-
+ 
         //verificarion is le l'utilisateur a le role d'un enseignant
-        if ($this->isGranted('ROLE_ENSEIGNANT')) {
+        if ($this->isGranted( 'ROLE_ENSEIGNANT')) {
             $enseignant = $user->getEnseignant();
-            if ($enseignant) {
+            if ($enseignant) {         
                 $reserve->addEnseignant($enseignant);
             }
         }
 
-        $form = $this->createForm(ReserveType::class, $reserve);
+        $form = $this->createForm(ReserveType::class, $reserve,[
+            'exclude_enseignants' => $this->isGranted('ROLE_ENSEIGNANT'),
+        ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

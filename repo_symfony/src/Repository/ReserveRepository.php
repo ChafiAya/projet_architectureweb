@@ -131,6 +131,18 @@ class ReserveRepository extends ServiceEntityRepository
             ->setParameter('enseignantId', $enseignant->getId())
             ->getQuery()
             ->getResult();
-    }  
+    } 
+    
+    // //cette fonction permet de recuperer l'enseignant qui est authentifier 
+    // // elle ne prent pas de parametre et retuen un array 
+    // //
+    // public function findAllWithEnseignants(): array
+    // {
+    //     return $this->createQueryBuilder('r')
+    //         ->leftJoin('r.enseignants', 'e')
+    //         ->addSelect('e')
+    //         ->getQuery()
+    //         ->getResult();
+    // }
 
 }

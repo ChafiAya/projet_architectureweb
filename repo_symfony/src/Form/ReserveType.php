@@ -15,6 +15,7 @@ class ReserveType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $excludeEnseignants = $options['exclude_enseignants'];
         $builder
             ->add('date_reservation', null, [
                 'widget' => 'single_text',
@@ -37,7 +38,16 @@ class ReserveType extends AbstractType
                 },
                 'multiple' => true,
             ])
+            
         ;
+        if (!$excludeEnseignants) {
+            // Ajouter le champ enseignants pour les administrateurs
+            $builder->add('enseignants', EntityType::class, [
+                'class' => Enseignant::class,
+                'choice_label' => 'nom',
+                'multiple' => true,
+            ]);
+        }
 
         
     }
@@ -46,6 +56,7 @@ class ReserveType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Reserve::class,
+            'exclude_enseignants' => false,
         ]);
     }
 }

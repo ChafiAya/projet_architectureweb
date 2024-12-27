@@ -55,7 +55,7 @@
                 <th scope="col">Date réservation</th>
                 <th scope="col">Heure départ</th>
                 <th scope="col">Heure fin</th>
-                {# <th scope="col">Nom Enseignant</th>  #}
+                <th scope="col">Nom Enseignant</th> 
                 <th scope="col">Promotion</th>
                 <th scope="col">Salle</th>
                 <th scope="col">Actions</th>
@@ -70,7 +70,13 @@
                 <td>{{ reserve.dateReservation|date('Y-m-d') }}</td>
                 <td>{{ reserve.heureDepart|date('H:i:s') }}</td>
                 <td>{{ reserve.heureFin|date('H:i:s') }}</td>
-                {# <td>{{ reserve.enseignants|first.getNom() }}</td> #}
+                <td>
+                    {% if reserve.enseignants|length > 0 %}
+                        {{ reserve.enseignants|first.getNom() }}
+                    {% else %}
+                        Aucun enseignant
+                    {% endif %}
+                </td>
                 <td>{{ reserve.promotion|first.getEnseignement() }}</td>
                 <td>{{ reserve.salles|first.getNomDeSalle() }}</td>
                 <td>
