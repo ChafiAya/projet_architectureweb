@@ -1,10 +1,8 @@
-import './bootstrap.js';
-/*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
- */
+import 'bootstrap';
+import 'bootstrap/dist/css/bootstrap.min.css';
 import './styles/app.css';
+import './css/style.css';
+import 'animate.css/animate.min.css';
+import 'owl.carousel/dist/assets/owl.carousel.css';
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+console.log('Assets loaded!');

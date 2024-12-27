@@ -12,7 +12,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/reserve')]
 final class ReserveController extends AbstractController
@@ -21,19 +21,35 @@ final class ReserveController extends AbstractController
     #[Route('/', name: 'app_reserve_index', methods: ['GET'])]
     public function index(Request $request, ReserveRepository $reserveRepository, SaleRepository $saleRepository, PromotionRepository $promotionRepository): Response
     {
-        // Get 'salle_id', 'date_reservation', and 'promotion_id' from the request query parameters
+        //recuperer l'utilisateur connecter
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        // dd($user, $user->getEnseignant());
+        $reserves = [];
+
         $salleId = $request->query->get('salle_id');
         $dateReservation = $request->query->get('date_reservation');
         $promotionId = $request->query->get('promotion_id');
-    
-        // Cast 'salle_id' and 'promotion_id' to integer if they are not empty or null
-        $salleId = $salleId ? (int) $salleId : null;
-        $promotionId = $promotionId ? (int) $promotionId : null;
-    
-        // Fetch reservations based on salle_id, date_reservation, and promotion_id if provided
-        $reserves = $reserveRepository->findByFilters($salleId, $dateReservation, $promotionId);
-    
-        // Fetch all salles and promotions for the dropdown
+
+        // Vérification du rôle
+        if ($this->isGranted('ROLE_ADMIN')) {
+            // Admin peut voir toutes les réservations avec filtres
+            $salleId = $salleId ? (int) $salleId : null;
+            $promotionId = $promotionId ? (int) $promotionId : null;
+            // Appeler la méthode existante pour filtrer
+            $reserves = $reserveRepository->findByFilters($salleId, $dateReservation, $promotionId);
+        } 
+        elseif ($this->isGranted('ROLE_ENSEIGNANT')) {
+            
+            // Enseignant peut voir uniquement ses propres réservations
+            $enseignant = $user->getEnseignant(); 
+
+            if ($enseignant) {
+                $reserves = $reserveRepository->SelectEnseignant($enseignant);
+            }
+        }
+
+        // Récupération des salles et promotions pour l'affichage
         $salles = $saleRepository->findAll();
         $promotions = $promotionRepository->findAll();
     
@@ -49,12 +65,33 @@ final class ReserveController extends AbstractController
     }
     
 
-
-
     #[Route('/new', name: 'app_reserve_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, ReserveRepository $reserveRepository): Response
     {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        if (!$user || !($this->isGranted('ROLE_ENSEIGNANT') || $this->isGranted('ROLE_ADMIN'))) {
+            throw $this->createAccessDeniedException();
+        }
+        
         $reserve = new Reserve();
+        $formOptions = ['exclude_enseignants' => false];        
+
+        // Create form but exclude enseignants field if user is ROLE_ENSEIGNANT
+        $formOptions = [];
+        if ($this->isGranted('ROLE_ENSEIGNANT')) {
+            $formOptions['exclude_enseignants'] = true;
+        }
+
+        //verificarion is le l'utilisateur a le role d'un enseignant
+        if ($this->isGranted('ROLE_ENSEIGNANT')) {
+            $enseignant = $user->getEnseignant();
+            if ($enseignant) {
+                $reserve->addEnseignant($enseignant);
+            }
+        }
+
         $form = $this->createForm(ReserveType::class, $reserve);
         $form->handleRequest($request);
 
@@ -73,12 +110,9 @@ final class ReserveController extends AbstractController
                 $conflitEnseignant = $reserveRepository->findConflictingReservationsForEnseignant(
                     $enseignant, $selectDate_reservation, $selectHeureDebut, $selectHeureFin
                 );
-                if (count($conflitEnseignant) > 0) {
-                    $this->addFlash('error', 'Vous avez déjà une réservation durant cette période.');
-                    return $this->render('reserve/new.html.twig', [
-                        'reserve' => $reserve,
-                        'form' => $form,
-                    ]);
+                if(count($conflitEnseignant)>0){
+                    $this->addFlash('error',sprintf('Vous avez  déjà une réservation durant cette période.'));
+                    $this->redirectToRoute('app_reserve_new');
                 }
             }
 
@@ -89,33 +123,27 @@ final class ReserveController extends AbstractController
                     if (count($conflictCapacity) > 0) {
                         $this->addFlash('error', sprintf(
                             'La salle ne peut pas accueillir la promotion car la capacité maximale est insuffisante pour %d étudiants.',
-                            $promo->getNbrEtudiant()
 
                         ));
 
-                        return $this->render('reserve/new.html.twig', [
-                            'reserve' => $reserve,
-                            'form' => $form,
-                        ]);
+                        $this->redirectToRoute('app_reserve_new');
                     }
                 }
             }
 
-            // Check for room reservation conflicts
-            foreach ($selectedSalles as $salle) {
-                $conflitReservation = $reserveRepository->findConflictingReservations($salle, $selectDate_reservation, $selectHeureDebut, $selectHeureFin);
-                if (count($conflitReservation) > 0) {
-                    $this->addFlash('error', 'La salle sélectionnée est déjà réservée pendant cette période.');
-                    return $this->render('reserve/new.html.twig', [
-                        'reserve' => $reserve,
-                        'form' => $form,
-                    ]);
+            //verification de conflit 
+            foreach($selectedSalles as $sale ){
+                $conflitReservation = $reserveRepository->findConflictingReservations($sale,$selectDate_reservation,$selectHeureDebut,$selectHeureFin);
+                if(count($conflitReservation)>0){
+                    $this->addFlash('error', 'The selected room is already reserved during the specified time.');
+                    return $this->redirectToRoute('app_reserve_new');
                 }
             }
 
             // Save the reservation
             $entityManager->persist($reserve);
             $entityManager->flush();
+            
 
             return $this->redirectToRoute('app_reserve_index', [], Response::HTTP_SEE_OTHER);
         }

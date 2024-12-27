@@ -1,12 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Search Reservations{% endblock %}
+{% block title %}Recherche des Réservations{% endblock %}
 
 {% block body %}
-    <h1>Search for Reservations by Room</h1>
+<div class="container mt-5">
+    <h1 class="text-center mb-4">Rechercher des Réservations par Salle</h1>
 
-    {{ form_start(form) }}
-        {{ form_row(form.salle) }}
-        <button type="submit">Search</button>
-    {{ form_end(form) }}
+
+    <div class="card shadow-sm p-4">
+        {{ form_start(form) }}
+
+
+            <div class="mb-3">
+                {{ form_label(form.salle, 'Sélectionner une Salle', {'class': 'form-label'}) }}
+                {{ form_widget(form.salle, {'attr': {'class': 'form-select'}}) }}
+            </div>
+
+
+            <div class="mt-4 text-center">
+                <button type="submit" class="btn btn-primary">Rechercher</button>
+            </div>
+
+        {{ form_end(form) }}
+    </div>
+</div>
 {% endblock %}
