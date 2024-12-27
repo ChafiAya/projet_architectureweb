@@ -9,6 +9,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Regex;
 
 class EnseignantType extends AbstractType
 {
@@ -22,16 +23,22 @@ class EnseignantType extends AbstractType
                 'label' => 'Prénom',
             ])
             ->add('Email', TextType::class, [
-                'label' => 'Email',
+                'label' => 'Email (e.g., prenom.nom.etu@univ-lille.fr)',
                 'attr' => [
-                    'placeholder' => 'example.etu@univ-lille.fr', // Placeholder text
+                    'placeholder' => 'prenom.nom.etu@univ-lille.fr',
+                ],
+                'constraints' => [
+                    new Regex([
+                        'pattern' => '/^[a-zA-Z]+(?:\.[a-zA-Z]+)*\.etu@univ-lille\.fr$/',
+                        'message' => 'Veuillez saisir un email valide au format prenom.nom.etu@univ-lille.fr.',
+                    ]),
                 ],
             ])
             ->add('id_matiere', EntityType::class, [
                 'class' => Matiere::class,
                 'choice_label' => 'nom',
                 'label' => 'Matière',
-                'placeholder' => 'Select a Matiere',
+                'placeholder' => 'Sélectionnez une matière',
                 'required' => false,
             ]);
     }
