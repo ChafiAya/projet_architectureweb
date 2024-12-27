@@ -46,8 +46,9 @@ Ce projet est une application web conçue pour simplifier la réservation des sa
    ```
 4. Configurez la base de données :
    ```bash
-   php bin/console doctrine:database:create
-   php bin/console doctrine:migrations:migrate
+   symfony console doctrine:database:create
+   symfony console meke:migration
+   symfony console doctrine:migrations:migrate
    ```
 5. Lancez le serveur Symfony :
    ```bash
