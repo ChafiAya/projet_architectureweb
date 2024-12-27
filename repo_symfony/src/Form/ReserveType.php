@@ -30,11 +30,6 @@ class ReserveType extends AbstractType
                 'choice_label' => 'nom_de_salle',
                 'multiple' => true,
             ])
-            ->add('enseignants', EntityType::class, [
-                'class' => Enseignant::class,
-                'choice_label' => 'nom',
-                'multiple' => true,
-            ])
             ->add('promotion', EntityType::class, [
                 'class' => Promotion::class,
                 'choice_label' => function (Promotion $promotion) {
@@ -43,6 +38,8 @@ class ReserveType extends AbstractType
                 'multiple' => true,
             ])
         ;
+
+        
     }
 
     public function configureOptions(OptionsResolver $resolver): void

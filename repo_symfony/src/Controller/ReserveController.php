@@ -21,19 +21,35 @@ final class ReserveController extends AbstractController
     #[Route('/', name: 'app_reserve_index', methods: ['GET'])]
     public function index(Request $request, ReserveRepository $reserveRepository, SaleRepository $saleRepository, PromotionRepository $promotionRepository): Response
     {
-        // Get 'salle_id', 'date_reservation', and 'promotion_id' from the request query parameters
+        //recuperer l'utilisateur connecter
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+        // dd($user, $user->getEnseignant());
+        $reserves = [];
+
         $salleId = $request->query->get('salle_id');
         $dateReservation = $request->query->get('date_reservation');
         $promotionId = $request->query->get('promotion_id');
-    
-        // Cast 'salle_id' and 'promotion_id' to integer if they are not empty or null
-        $salleId = $salleId ? (int) $salleId : null;
-        $promotionId = $promotionId ? (int) $promotionId : null;
-    
-        // Fetch reservations based on salle_id, date_reservation, and promotion_id if provided
-        $reserves = $reserveRepository->findByFilters($salleId, $dateReservation, $promotionId);
-    
-        // Fetch all salles and promotions for the dropdown
+
+        // Vérification du rôle
+        if ($this->isGranted('ROLE_ADMIN')) {
+            // Admin peut voir toutes les réservations avec filtres
+            $salleId = $salleId ? (int) $salleId : null;
+            $promotionId = $promotionId ? (int) $promotionId : null;
+            // Appeler la méthode existante pour filtrer
+            $reserves = $reserveRepository->findByFilters($salleId, $dateReservation, $promotionId);
+        } 
+        elseif ($this->isGranted('ROLE_ENSEIGNANT')) {
+            
+            // Enseignant peut voir uniquement ses propres réservations
+            $enseignant = $user->getEnseignant(); 
+
+            if ($enseignant) {
+                $reserves = $reserveRepository->SelectEnseignant($enseignant);
+            }
+        }
+
+        // Récupération des salles et promotions pour l'affichage
         $salles = $saleRepository->findAll();
         $promotions = $promotionRepository->findAll();
     
@@ -49,12 +65,33 @@ final class ReserveController extends AbstractController
     }
     
 
-
-
     #[Route('/new', name: 'app_reserve_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager, ReserveRepository $reserveRepository): Response
     {
+        /** @var \App\Entity\User $user */
+        $user = $this->getUser();
+
+        if (!$user || !($this->isGranted('ROLE_ENSEIGNANT') || $this->isGranted('ROLE_ADMIN'))) {
+            throw $this->createAccessDeniedException();
+        }
+        
         $reserve = new Reserve();
+        $formOptions = ['exclude_enseignants' => false];        
+
+        // Create form but exclude enseignants field if user is ROLE_ENSEIGNANT
+        $formOptions = [];
+        if ($this->isGranted('ROLE_ENSEIGNANT')) {
+            $formOptions['exclude_enseignants'] = true;
+        }
+
+        //verificarion is le l'utilisateur a le role d'un enseignant
+        if ($this->isGranted('ROLE_ENSEIGNANT')) {
+            $enseignant = $user->getEnseignant();
+            if ($enseignant) {
+                $reserve->addEnseignant($enseignant);
+            }
+        }
+
         $form = $this->createForm(ReserveType::class, $reserve);
         $form->handleRequest($request);
 

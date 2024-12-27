@@ -113,8 +113,16 @@ class ReserveRepository extends ServiceEntityRepository
     
         return $qb->getQuery()->getResult();
     }
-    
-
+    //cette methode nous permet de selectionner les reservation effectuer par un enseignant specifique
+    public function SelectEnseignant(Enseignant $enseignant): array
+    {
+        return $this->createQueryBuilder('r')
+            ->innerJoin('r.enseignants', 'e')
+            ->where('e = :enseignant')
+            ->setParameter('enseignant', $enseignant)
+            ->getQuery()
+            ->getResult();
+    }
     public function findByEnseignant(User $enseignant)
     {
         return $this->createQueryBuilder('r')
